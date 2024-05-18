@@ -9,9 +9,7 @@ name: Checks
 on: [push]
 
 jobs:
-# Define a new job with an ID test-lint.You want to use an ID like this because it might need to be referenced somewhere else inside of GitHub Actions
-
-actions.
+# Define a new job with an ID test-lint.You want to use an ID like this because it might need to be referenced somewhere else inside of GitHub Actions actions.
   test-lint:
     name: Test and Lint
 # Runs on is the runner that we're going to be running our job on.
