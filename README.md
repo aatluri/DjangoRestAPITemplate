@@ -50,22 +50,22 @@
     wsgi.py
 
 ## Run Our Development Server
-So now that we've actually created our Django project, we can finally go ahead and run our development
+1. So now that we've actually created our Django project, we can finally go ahead and run our development
 server and see something in the browser.
-From the terminal run the following command: 'docker compose up' . This is the command for starting our services.
-Go to http://127.0.0.1:8000/ and you will see the Django Launch Page.
-So this is the template that is added for all default Django projects.
-This basically means that our project is working correctly and that we've configured everything with Docker.
-We are running the services inside Docker.
-To Stop the services, we can press Ctrl + C.
+2. From the terminal run the following command: 'docker compose up' . This is the command for starting our services.
+3. Go to http://127.0.0.1:8000/ and you will see the Django Launch Page.
+4. So this is the template that is added for all default Django projects.
+5. This basically means that our project is working correctly and that we've configured everything with Docker.
+6. We are running the services inside Docker.
+7. To Stop the services, we can press Ctrl + C.
 
 ## Configure GitHub Actions
-GitHub Actions is an automation tool. 
-You start by setting up triggers. So triggers can be anything that happens to your project on GitHub.
-There are various different trigger options. They're all documented on the GitHub actions website.
-When this trigger occurs, for example, when the code is pushed to get hub, you then set up jobs that run when that trigger is hit.
+1. GitHub Actions is an automation tool. 
+2. You start by setting up triggers. So triggers can be anything that happens to your project on GitHub.
+3. There are various different trigger options. They're all documented on the GitHub actions website.
+4. When this trigger occurs, for example, when the code is pushed to get hub, you then set up jobs that run when that trigger is hit.
 
-Create a config file at DiagnosticTestRecommender/.github/workflows/checks.yml file.
-Once you create the config file, the next time you commit and push your code to github, the github actions will run
-If you look at the steps in github actions, you will see more steps than you added in the config file. these are added automatically.
-We can see the log output by expanding these steps.
+5. Create a config file at DiagnosticTestRecommender/.github/workflows/checks.yml file.
+6. Once you create the config file, the next time you commit and push your code to github, the github actions will run
+7. If you look at the steps in github actions, you will see more steps than you added in the config file. these are added automatically.
+8. We can see the log output by expanding these steps.
