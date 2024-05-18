@@ -20,35 +20,34 @@
 
 
 ## Linting
-Linting checks your code formatting. We will be using flake 8.
-We will install flake 8
-Then we wll run our flake 8 tool through docker compose via the command 'docker-compose run --rm app sh -c "flake8"'
+1. Linting checks your code formatting. We will be using flake 8.
+2. We will install flake 8
+3. Then we wll run our flake 8 tool through docker compose via the command 'docker-compose run --rm app sh -c "flake8"'
 
 
 ## Unit Testing
-We will be using the Django Test Suite to run our unit tests.
-We will set up the tests for each different Django app we create
-We will run the tests through Docker Compose with the command 'docker-compose run --rm app sh -c "python manage.py test"
+1. We will be using the Django Test Suite to run our unit tests.
+2. We will set up the tests for each different Django app we create
+3. We will run the tests through Docker Compose with the command 'docker-compose run --rm app sh -c "python manage.py test"
 
 ## Creating the Django Project
-We going to create our Django project and we're going to do it via Docker Compose.
-So the way that you do it is you run the following command in the terminal or they get Bash Command
-'docker-compose run --rm app sh -c "django-admin startproject app ."'
-Now, because Django is installed inside our Docker image, we can run the CLIA commands just as if they were on our local machine.
-What's going to happen here is it's going to create a new project called App and we specify the dot here to say create it in the current directory.
-So here we have the new Django project added to our code.
-The way that it was able to sync was through the volume that we defined in Docker Compose.
-So because we have the app directory mapped, then what it does is anything we create inside the container
-gets mapped to our project and anything we create inside the project, our directory gets mapped tothe container.
-So it's like a two way relationship thing where you can create files in the container and access them in the project and you can create files in the project and access them in the container.
-The following are created when we create the Django Project :
-app folder inside the main app folder.
-__pycache__ folder
-__init__.py file
-asgi.py
-settings.py
-urls.py
-wsgi.py
+1. We going to create our Django project and we're going to do it via Docker Compose.
+2. So the way that you do it is you run the following command in the terminal or they get Bash Command
+3. 'docker-compose run --rm app sh -c "django-admin startproject app ."'
+4. Now, because Django is installed inside our Docker image, we can run the CLIA commands just as if they were on our local machine.
+5. What's going to happen here is it's going to create a new project called App and we specify the dot here to say create it in the current directory.
+6. So here we have the new Django project added to our code.
+7. The way that it was able to sync was through the volume that we defined in Docker Compose.
+8. So because we have the app directory mapped, then what it does is anything we create inside the container gets mapped to our project and anything we create inside the project, our directory gets mapped tothe container.
+9. So it's like a two way relationship thing where you can create files in the container and access them in the project and you can create files in the project and access them in the container.
+10. The following are created when we create the Django Project :
+    app folder inside the main app folder.
+    __pycache__ folder
+    __init__.py file
+    asgi.py
+    settings.py
+    urls.py
+    wsgi.py
 
 ## Run Our Development Server
 So now that we've actually created our Django project, we can finally go ahead and run our development
@@ -61,4 +60,12 @@ We are running the services inside Docker.
 To Stop the services, we can press Ctrl + C.
 
 ## Configure GitHub Actions
-The 
+GitHub Actions is an automation tool. 
+You start by setting up triggers. So triggers can be anything that happens to your project on GitHub.
+There are various different trigger options. They're all documented on the GitHub actions website.
+When this trigger occurs, for example, when the code is pushed to get hub, you then set up jobs that run when that trigger is hit.
+
+Create a config file at DiagnosticTestRecommender/.github/workflows/checks.yml file.
+Once you create the config file, the next time you commit and push your code to github, the github actions will run
+If you look at the steps in github actions, you will see more steps than you added in the config file. these are added automatically.
+We can see the log output by expanding these steps.
