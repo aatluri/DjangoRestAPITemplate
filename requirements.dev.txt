@@ -1,0 +1,1 @@
+flake8>=4.0.1,<4.1 #Specifies to use latest patch version but will prevent from using the next minor version

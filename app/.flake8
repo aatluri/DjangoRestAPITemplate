@@ -1,0 +1,7 @@
+# We specify the files that we want flake8 to ignore during the linting process.
+[flake8]
+exclude =
+  migrations,
+  __pycache__,
+  manage.py,
+  settings.py

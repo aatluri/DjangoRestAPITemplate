@@ -1,0 +1,50 @@
+# The three dashes signifies that this is a YAML File
+---
+# This is the name that will appear in github actions
+name: Checks
+
+# This is the trigger
+# So we're saying we want this particular GitHub actions to run on push, which means any push of changes to our project.
+# So any time we do get comment and then push it up to GitHub, it's going to run the jobs that we specify inside this text YAML file.
+on: [push]
+
+jobs:
+# Define a new job with an ID test-lint.You want to use an ID like this because it might need to be referenced somewhere else inside of GitHub Actions
+
+actions.
+  test-lint:
+    name: Test and Lint
+# Runs on is the runner that we're going to be running our job on.
+# So there are various different runners available on the GitHub actions website.
+# Docker compose comes preinstalled on the Ubuntu 20.04 runner.
+# So if you're using this, run it then it should already have docker compose and docker installed andavailable.
+# So you don't need to do anything like install it inside the container that we're running the job on. It should already be there ready for us to use.
+    runs-on: ubuntu-20.04
+# So the steps are the different things that run for the job.
+    steps:
+# name of the step
+      - name: Login to Docker Hub
+# So uses allows you to use another pre-made action that's provided in the GitHub actions repository. This action is used to log in to Docker
+        uses: docker/login-action@v1
+# Then you pass the parameters for the action. 
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+# It t checks our code out inside our GitHub actions job.
+# The reason we need to do this is because by default the code is not checked out inside the job that we're running.
+# The reason for this is because sometimes you may not need to check out the code, so there might be
+# certain jobs that you want to perform that don't require the code in order to perform those jobs.
+# However, in our case, we need to access the code because we need to run test unrelenting on the code.
+# So we need to use this check out step here to make sure the code is available for us to run the next step on.
+      - name: Checkout
+        uses: actions/checkout@v2
+# We add the step to run the unit tests
+      - name: Test
+        run: docker-compose run --rm app sh -c "python manage.py test"
+# We add the step to run the Linting process.
+      - name: Lint
+        run: docker-compose run --rm app sh -c "flake8"
+
+
+# So if any of these steps fail, that means they return anything other than exit zero, which is the Linux exit signal for successful exit.
+# If any of these fail, then the job that is running is going to fail.
