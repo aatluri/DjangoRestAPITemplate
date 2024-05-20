@@ -1,5 +1,16 @@
 # DiagnosticTestRecommender API
 
+## Create GitHub Project
+## Define Python Requirements
+## Docker Configiration
+### Docker File
+### Docker Compose File
+## Create Django Project
+## Configure Github Actions
+## Configure Database
+
+
+
 ## GitHub Project & Docker Hub
 1. Ensure you have github account
 2. Ensure you have a docker hub account.
@@ -87,7 +98,7 @@ server and see something in the browser.
 2. So this will allow us to define the database configuration inside our actual project source code, which means it's reusable for other developers who might be working on the project. Or if we want to shift from one machine to another and it's also reusable for our deployment environment. The way we are going to do this is we are going to have two services in Docker Compose. One is the App and the other is the Database service.
 3. We will be using the Postgresql database.
 
-##  Connecting to our PostgreSql Database
+##  Installing the PostgreSql Database Adapter
 1. Psycopg2 is the package needed for Django to connect to our PostGreSql database.
 2. So to install psychology, too, they have a list of the package dependencies in the official documentation and this list includes the 
     C compiler 
@@ -101,3 +112,25 @@ server and see something in the browser.
     build-base, postgresqldev and musl-dev are only needed to install the psycop2 package. So these can be deleted after we build our project.
 
 4. So we update our DockerFile to install these dependencies.
+
+## Configure Database in Django
+1. Open up settings.py and scroll to the database section
+2. You will see a default database configured. This comes with all django projects.
+3. You can replace that configuration wuth the equivalent for POstgreSql.
+
+## Fixing Race Condition
+1. Although we added a depends on condition in our docker compose file which ensures that the app service only starts after the db service, this can still lead to issues.
+2. This is because starting the db service doesnt necessarily mean that the postgresql database is up and running. And if the app services to start and connect to the db and if postgresql is not yet ready, the app will crash.
+3. To fix this race condition, we create another django app called Core and added a custom wait for db command which checks for the availability of the database before proceeding.
+
+
+## Database Migrartions
+1. Django comes witn an ORM (Object Relational Mapper)
+2. The ORM serves as an abstraction layer between your data and your actual database.
+3. All the manual work of setting up tables, adding columns, sql statements to add data, change data etc.. are handledn by Django using the ORM.
+4. We first define our models 
+5. Models are Python classes wbased on the Python Models Base Class. Models also map to a table in your database. Models contain a name which is the name of the class and then some fields which would be the columns in your table. We can also store other metadata like relaltionships between tables. Finally, if you want to, you can add some custom python logic.So if you wanted to execute some code every time you saved or loaded something or you wanted to add some validation, you can add that to the python code.
+5. Using these models you execute a Django command to generate migration files. 
+6. Then you run these migration files which will set up your database.
+7. Ensure app is enabled in settings.py
+8. use Django CLI to run "python manage.py makemigrations"

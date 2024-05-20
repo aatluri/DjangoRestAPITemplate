@@ -36,9 +36,9 @@ jobs:
 # So we need to use this check out step here to make sure the code is available for us to run the next step on.
       - name: Checkout
         uses: actions/checkout@v2
-# We add the step to run the unit tests
+# We add the step to first run the wait for db command and then run the unit tests
       - name: Test
-        run: docker-compose run --rm app sh -c "python manage.py test"
+        run: docker-compose run --rm app sh -c "python manage.py wait_for_db && python manage.py test"
 # We add the step to run the Linting process.
       - name: Lint
         run: docker-compose run --rm app sh -c "flake8"
