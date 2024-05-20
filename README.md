@@ -25,10 +25,22 @@
 3. Then we wll run our flake 8 tool through docker compose via the command 'docker-compose run --rm app sh -c "flake8"'
 
 
-## Unit Testing
+## Testing (Django Test Framework)
 1. We will be using the Django Test Suite to run our unit tests.
 2. We will set up the tests for each different Django app we create
 3. We will run the tests through Docker Compose with the command 'docker-compose run --rm app sh -c "python manage.py test"
+4. The Django test framework is built on top of the unit test library.ls
+5. The unit test library comes out of the box with Python, but the Django test framework adds some additional features to this library.
+6. That's useful when you're testing Django projects.
+7. Some of these additional features include things like the test client, which is a dummy web browser that you can use to make requests to your project.
+8. It also allows you to simulate authentication so you can handle authentication by overriding it for your unit tests, which is useful when you're running tests because you don't always want to have to handle the log in and registration process for your test.
+9. The Django test framework also comes with database integration.
+10. It automatically creates a temporary database for you and then it will automatically clear the data from that database.
+11. Once you've finished running each test on top of Django, we have the Django Rest framework, which also adds some additional testing features specifically useful for testing rest APIs.
+12. The main one that we'll be using is the API test client, which is just like the test client that Django provides, except it's specifically used for testing API requests.
+### Test Classes
+1. SimpleTestCase : Tests that dont need database integration
+2. TestCase : Tests that need database integration.
 
 ## Creating the Django Project
 1. We going to create our Django project and we're going to do it via Docker Compose.
@@ -69,3 +81,23 @@ server and see something in the browser.
 6. Once you create the config file, the next time you commit and push your code to github, the github actions will run
 7. If you look at the steps in github actions, you will see more steps than you added in the config file. these are added automatically.
 8. We can see the log output by expanding these steps.
+
+##  Database
+1. We're going to be using Docker Compose to configure our database for our project.
+2. So this will allow us to define the database configuration inside our actual project source code, which means it's reusable for other developers who might be working on the project. Or if we want to shift from one machine to another and it's also reusable for our deployment environment. The way we are going to do this is we are going to have two services in Docker Compose. One is the App and the other is the Database service.
+3. We will be using the Postgresql database.
+
+##  Connecting to our PostgreSql Database
+1. Psycopg2 is the package needed for Django to connect to our PostGreSql database.
+2. So to install psychology, too, they have a list of the package dependencies in the official documentation and this list includes the 
+    C compiler 
+    Python3-dev
+    libpq-dev
+3. For our alpine image , the equivalent packages are:
+    postgresql-client
+    build-base
+    postgresql-dev
+    musl-dev
+    build-base, postgresqldev and musl-dev are only needed to install the psycop2 package. So these can be deleted after we build our project.
+
+4. So we update our DockerFile to install these dependencies.

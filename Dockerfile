@@ -49,6 +49,12 @@ ARG DEV=false
 RUN python -m venv /py && \
 # Upgrade pip for the virtual environment we just created
     /py/bin/pip install --upgrade pip && \
+# Installing the postgresql-client package inside our alpine image in order for the psycopg2 package to be able to connect to Postgre
+    apk add --update --no-cache postgresql-client jpeg-dev && \
+# Sets a virtual dependency package. It groups all the packages we install under this name so that they can be deleted later.
+    apk add --update --no-cache --virtual .tmp-build-deps \
+# We then  add the packages we need to be able to install the psycop2 package.
+        build-base postgresql-dev musl-dev zlib zlib-dev linux-headers && \
 # Install all the requirements inside the virtual environment.
     /py/bin/pip install -r /tmp/requirements.txt && \
 # If dev equals to true then it installs the dev dependencies. the fi is how you end an if statement in shell script.
@@ -57,6 +63,8 @@ RUN python -m venv /py && \
     fi && \
 # remove the tmp directory to keep the image lightweight.
     rm -rf /tmp && \
+# we remove the virtual dependency package we created in line 55. Because these packages are only needed to install psycop2 and are not needed post that.
+    apk del .tmp-build-deps && \
 # Adds a new user inside our image.
 # The reason we do this is because it's best practice not to use the root user. If we didn't specify this bit, then the only user available inside the alpine image that we're using
 # would be the root user.

@@ -7,33 +7,66 @@
 # version: "3.9" 
 
 # This is the main block inside the Docker compose file. It consists of one more services needed by our application
-# app is the name of our service
+
+
+
+
+services:
+# app is the name of the service we are creating for our application
+  app:
 # We have build context and the current directory. What this does is it says we want to build the Docker file inside our current directory. 
 # The . means current directory
+    build:
+      context: .
 # We then set an argument DEV=TRUE. This will be used in the Docker File during build.
+      args:
+        - DEV=true
 # Then we have the port mappings. So this maps port 8000 on our local machine to port 8000 inside our Docker container.
 # This is how we can access the network when we want to connect to our server.
+    ports:
+      - "8000:8000"
 # Next we have volumes, volumes odd way of mapping directories from our system into the Docker container.
 # So we're mapping the app directory that we created in the project to Ford's hash app inside our container.
 # The reason we add this is because we want the updates that we make to our code in our local project to be reflected in the running container in real time.
 # So we don't want to have to rebuild the container. 
 # Every time we change a line of code, we want to automatically sync the code in our project to the cloud running in the container.
+    volumes:
+      - ./app:/app
 # Finally we have the command that is used to run the service.
 # We can override this command when we run Docker compose run.
 # However, by default, if we don't specify a command, it's going to use the command we define inside our Docker compose file.
-services:
-  app:
-    build:
-      context: .
-      args:
-        - DEV=true
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./app:/app
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
 
+# Tells the app service how to connect to the db service
+    environment:
+      - DB_HOST=db
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASS=changeme
+# Tells Docker compose that the app service depends on the db service. it will wait for the db service to start.
+    depends_on:
+      - db
+# create a service called db
+  db:
+# This is the image we are going to be using from Docker Hub. You can find more images at https://hub.docker.com/_/postgres
+    image: postgres:13-alpine
+# This is the vilume we created below and the path is where the data is persisted.
+    volumes:
+      - dev-db-data:/var/lib/postgresql/data
+# We set these environments variables to set the initial database configuration of the db service
+# So when our database first starts, it's going to create a database and a named database inside Postgres called Dev DB.
+# And then it's going to create a user called dev user and it's going to set the positive that use it to change me.
+    environment:
+      - POSTGRES_DB=devdb
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=changeme
+
+# this is the name of the volume . We dont need to anything else here as Docker Compose will take care of it. 
+# The indentation for this matches that of services.
+volumes:
+  dev-db-data:
 
 # Run "docker-compose build" to build the image. So it effectively does the same as Docker build.
+# Run "docker-compose up" to run the development server.
 # However it does it via the Docker file, so it builds and tags the images appropriately for running our Docker compose configuration.
