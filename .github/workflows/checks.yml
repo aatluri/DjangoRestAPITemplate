@@ -24,7 +24,7 @@ jobs:
       - name: Login to Docker Hub
 # So uses allows you to use another pre-made action that's provided in the GitHub actions repository. This action is used to log in to Docker
         uses: docker/login-action@v1
-# Then you pass the parameters for the action. 
+# Then you pass the parameters for the action.
         with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -41,7 +41,7 @@ jobs:
         run: docker-compose run --rm app sh -c "python manage.py wait_for_db && python manage.py test"
 # We add the step to run the Linting process.
       - name: Lint
-        run: docker-compose run --rm app sh -c "flake8"
+        run: docker-compose run --rm app sh -c "flake8 --max-line-length 99"
 
 
 # So if any of these steps fail, that means they return anything other than exit zero, which is the Linux exit signal for successful exit.

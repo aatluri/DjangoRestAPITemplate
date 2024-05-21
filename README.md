@@ -20,7 +20,7 @@
 6. So head over to the Docker Hub page, which is Hub dot dot com, and we're going to click on your username here and click on account settings.
 7. Then we're going to click on security and this will allow us to create something called an access token.
 8. We're going to create a token by clicking new access token and you can give the token, the description,the name of the project.
-9. Now you're only going to see this token once.Once you close this, you won't be able to get it back. 
+9. Now you're only going to see this token once.Once you close this, you won't be able to get it back.
 10. However, if you do close, you don't worry.You can just simply delete the token and you can create a new token.
 11. Go back to the github project And I'm going to click on Secrets. And then we're going to add a new repository secret.
 12. First secret we're going to add is going to be the name of the user that we're going to log in. So I'm going to type DOCKERHUB_USER.
@@ -83,7 +83,7 @@ server and see something in the browser.
 7. To Stop the services, we can press Ctrl + C.
 
 ## Configure GitHub Actions
-1. GitHub Actions is an automation tool. 
+1. GitHub Actions is an automation tool.
 2. You start by setting up triggers. So triggers can be anything that happens to your project on GitHub.
 3. There are various different trigger options. They're all documented on the GitHub actions website.
 4. When this trigger occurs, for example, when the code is pushed to get hub, you then set up jobs that run when that trigger is hit.
@@ -100,8 +100,8 @@ server and see something in the browser.
 
 ##  Installing the PostgreSql Database Adapter
 1. Psycopg2 is the package needed for Django to connect to our PostGreSql database.
-2. So to install psychology, too, they have a list of the package dependencies in the official documentation and this list includes the 
-    C compiler 
+2. So to install psychology, too, they have a list of the package dependencies in the official documentation and this list includes the
+    C compiler
     Python3-dev
     libpq-dev
 3. For our alpine image , the equivalent packages are:
@@ -128,9 +128,27 @@ server and see something in the browser.
 1. Django comes witn an ORM (Object Relational Mapper)
 2. The ORM serves as an abstraction layer between your data and your actual database.
 3. All the manual work of setting up tables, adding columns, sql statements to add data, change data etc.. are handledn by Django using the ORM.
-4. We first define our models 
+4. We first define our models
 5. Models are Python classes wbased on the Python Models Base Class. Models also map to a table in your database. Models contain a name which is the name of the class and then some fields which would be the columns in your table. We can also store other metadata like relaltionships between tables. Finally, if you want to, you can add some custom python logic.So if you wanted to execute some code every time you saved or loaded something or you wanted to add some validation, you can add that to the python code.
-5. Using these models you execute a Django command to generate migration files. 
+5. Using these models you execute a Django command to generate migration files.
 6. Then you run these migration files which will set up your database.
 7. Ensure app is enabled in settings.py
-8. use Django CLI to run "python manage.py makemigrations"
+8. use Django CLI to run "python manage.py makemigrations".
+9. Then python manage.py migrate to apply the migrations to the database. If it's already being applied, then it doesn't do anything, it just skips on and it continues with next command.
+
+
+## User Model
+1. Django comes with a built in authentication system.
+2. This gives us a basic framework of features that we can use for our project, including registration,login and authentication. So Django has some tools that allow us to relatively easily handle this.
+3. The default Django user model is the foundation of the authentication system.
+4. It's what includes the data of the users who register to this system using Django authentication, and it's also used to authenticate those users by checking their password.
+5. Django comes with a default user model.
+6. For example, by default it uses a username instead of a user's email address. And also it's not very easy to customize.
+7. It's best to define your own user model so that it makes it easier to customize. It's kind of like future proofing your project.
+8. The main difference between our user model and the default one is that we're going to be using an email instead of a username, but I'm going to show you how to do all of the work to set up a custom user model in case you want to add more customizations to your project later on.
+
+## Creating your own User Model
+1. Create a Model based from AbstractBaseClass and PermissionMixin. The AbstractBase class provides all of the authentication features. The PermissionsMixin is used for the Django permission system that allows you to assign permissions to different users.
+2. Create a custom manager. The manager is mostly used for the Django CLI integration, but it's also used for other things like creating and managing objects that of the user
+3. Set the auth user model configuration in your settings file and this will tell your Django project that you want to use this custom model foryour project.
+4. Finaly you can create and run the migrations using the new custom user model.
