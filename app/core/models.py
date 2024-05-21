@@ -28,6 +28,7 @@ class UserManager(BaseUserManager):
 # Takes the passin password and encrypts it using a hashing process
 # So when you look in the database , you will not see the actual password.
 # Save the user model. We use self._db so that in the event that we use multiple databases, we choose the db.
+
     def create_user(self, email, password=None, **extra_fields):
         """Create, save and return a new user."""
         if not email:
@@ -36,7 +37,6 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
-
 
 # Define create_user method.
 # We pass email and password for a user.
@@ -51,6 +51,7 @@ class UserManager(BaseUserManager):
 
         return user
 
+
 # Defining a new class and we base from abstract base user on the permissions mixed in.
 # And as I mentioned, abstract base user contains the functionality for the
 # authentication system, but not any fields.
@@ -58,18 +59,14 @@ class UserManager(BaseUserManager):
 # feature of Django, and it also contains any fields that are needed for the permissions feature.
 class User(AbstractBaseUser, PermissionsMixin):
     """User in the system."""
-
 # Define the fields
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
 # only staff users can log in to Django Admin. By defualt its set to False
     is_staff = models.BooleanField(default=False)
-
 # Assign the user manager created above to this custom model we created.
     objects = UserManager()
-
-
 # username field here which defines the field that we want to use for authentication.
 # And this is how we replace the username default field that comes with the default user model to our
 # custom email field
