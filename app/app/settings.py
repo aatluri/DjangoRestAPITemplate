@@ -38,8 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-# Add the core app we created to fix the database race condition explained in the readme document.
+# enable the rest framework
+    'rest_framework',
+    'rest_framework.authtoken',
+# enable the drf_spectacular framework in our project. https://drf-spectacular.readthedocs.io/en/latest/index.html
+    'drf_spectacular',
+# Enable the custom apps we created
     'core',
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -132,3 +138,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Setting the auth user config and telling it to use core.user
 AUTH_USER_MODEL = 'core.User'
+
+
+# COnfiguration that will allow the the rest_framework to generate the schema using drf spectacular open api
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+

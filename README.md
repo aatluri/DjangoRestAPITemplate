@@ -152,3 +152,25 @@ server and see something in the browser.
 2. Create a custom manager. The manager is mostly used for the Django CLI integration, but it's also used for other things like creating and managing objects that of the user
 3. Set the auth user model configuration in your settings file and this will tell your Django project that you want to use this custom model foryour project.
 4. Finaly you can create and run the migrations using the new custom user model.
+
+
+## Creating the user app
+1. Delete some of the unncessary files like admin, model, migrations etc..
+2. We first create a serialiser for creating our user object and serializing our user object.
+3. Serializers are used to convert complex data types, such as Django model instances, into Python data types that can be easily rendered into JSON, XML, or other content types. Serializers also provide deserialization, allowing parsed data to be converted back into complex types after first validating the incoming data. Serializers in Django are a part of the Django REST framework, a powerful and flexible toolkit for building Web APIs.
+4. We create a serializer and create a view that uses this serializer.
+5. So when you make the http type request, it goes through to the URL and then it gets passed into this create user view clause, which will then call the sterilizer and create the object and then return the appropriate response.
+6. URL -> View-> Serializer -> Model
+7. We first create a serializer that uses our model. We then create a view that uses our serializer. We then create a url pattern which when accessed will use the View. So when a http call is made to the url pattern defined, it calls the view thats is defined which inturn calls the serialiser which in turn uses the model.
+
+## Authentication
+1. We are using Token Authentication.
+2. Well, basically you start by creating a token.
+3. So we need to provide an endpoint that accepts the user's username and password or the email address and password. And that is then going to create a new token in our database and return that token to the client.
+4. So then the client can store that token somewhere So that could be in session stores.
+5. If you're using a web browser, it could be in the local storage, it could be in a cookie or it could be on an actual database on the local client.
+6. every request that the client makes to the APIs that have to be authenticated is simply includes this token in the http headers of the request, and this means that the request can be authenticated in our backend.
+7.  pros of using token authentication are that it is supported out of the box by Django rest framework.
+8. Cons of token auth is that the token needs to be stored on the client side so if someone gets hold of it, they can impersonate the user.
+9. Logging out happens on the client side and it works by deleting the token.
+10. Talk about how authentication works, see views file.

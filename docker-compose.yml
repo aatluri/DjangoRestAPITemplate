@@ -82,7 +82,8 @@ volumes:
 # Run docker-compose run --rm app sh -c "python manage.py wait_for_db && python manage.py migrate" to migrate
 # Run docker volume ls to list any volumes
 # Run docker volume rm "name of volume" to remove the volume
-# Run docker-compose run --rm app sh -c "flake8 --max-line-length 99" to run linting.
+# Run docker-compose run --rm app sh -c "flake8 --max-line-length 120" to run linting.
+# Run docker-compose run --rm app sh -c "python manage.py startapp user" to create a Django app within our project
 # http://127.0.0.1:8000/admin/login/?next=/admin/ to access the admin page
 # Superuser: admin@example.com , password=12345
 # However it does it via the Docker file, so it builds and tags the images appropriately for running our Docker compose configuration.
