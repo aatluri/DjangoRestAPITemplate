@@ -2,12 +2,12 @@
 Tests for models.
 """
 # from unittest.mock import patch
-# from decimal import Decimal
+from decimal import Decimal
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
-# from core import models
+from core import models
 
 
 class ModelTests(TestCase):
@@ -52,3 +52,23 @@ class ModelTests(TestCase):
 
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+
+# what this test does is it just test creating a simple diagnosticTest in the system.
+# First we create a user so that we can assign to our diagnosticTest object
+# Then we create the diagnosticTest object with its fields
+# Lastly we asset that the string representation of the diagnosticTest matches the title of the diagnosticTest object
+    def test_create_diagnosticTest(self):
+        """Test creating a diagnosticTest is successful."""
+        user = get_user_model().objects.create_user(
+            'test@example.com',
+            'testpass123',
+        )
+        diagnosticTest = models.DiagnosticTest.objects.create(
+            user=user,
+            title='Sample Diagnostic Test Name',
+            time_minutes=5,
+            price=Decimal('5.50'),
+            description='Sample Diagnostic Test description.',
+        )
+
+        self.assertEqual(str(diagnosticTest), diagnosticTest.title)

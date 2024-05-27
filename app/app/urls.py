@@ -35,4 +35,5 @@ urlpatterns = [
     # Connects the view we created in the user app to the main app.
     # The include allows us to include urls from a different app.
     path('api/user/', include('user.urls')),
+    path('api/diagnostictest/', include('diagnostictest.urls')),
 ]

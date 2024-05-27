@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from core import models
 
 
+# This is used to customise the Django admin page with respect to users.
 class UserAdmin(BaseUserAdmin):
     """Define the admin pages for users."""
     # will order the users by ID
@@ -65,3 +66,5 @@ class UserAdmin(BaseUserAdmin):
 # manager with a simple create read update operations wouldn't apply these changes that we've added here
 # for the ordering and for the list display.
 admin.site.register(models.User, UserAdmin)
+# Register the DiagnosticTest Model
+admin.site.register(models.DiagnosticTest)

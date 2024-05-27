@@ -1,13 +1,17 @@
 # DiagnosticTestRecommender API
 
-## Create GitHub Project
-## Define Python Requirements
-## Docker Configiration
-### Docker File
-### Docker Compose File
-## Create Django Project
-## Configure Github Actions
-## Configure Database
+## Explain what the project does
+## Explain the general content of this code base i.e the different folders and files.
+## Prerequisites to Run this Project
+## Explain how to run this project
+## Create a superuser & Go to Django Admin Interface
+## Go to the API Documentation Page
+## Explain what happens in the code when each of the APIs are called.
+## Steps if we want to reuse this codebase for another project.
+
+
+## Steps to setup this project
+### See if we can download the Udemy Course content
 
 
 
@@ -52,6 +56,14 @@
 ### Test Classes
 1. SimpleTestCase : Tests that dont need database integration
 2. TestCase : Tests that need database integration.
+
+## Creating Unit tests
+1. We always first create a helper method that creates the object eg: user or diagnostic test
+2. We create a api client that can be used to call the respective http endpoints
+3. In the test we use the helper method to create the object
+4. We use the api client to call the url
+5. Then we compare the values .
+
 
 ## Creating the Django Project
 1. We going to create our Django project and we're going to do it via Docker Compose.
@@ -154,7 +166,7 @@ server and see something in the browser.
 4. Finaly you can create and run the migrations using the new custom user model.
 
 
-## Creating the user app
+## Creating the User API
 1. Delete some of the unncessary files like admin, model, migrations etc..
 2. We first create a serialiser for creating our user object and serializing our user object.
 3. Serializers are used to convert complex data types, such as Django model instances, into Python data types that can be easily rendered into JSON, XML, or other content types. Serializers also provide deserialization, allowing parsed data to be converted back into complex types after first validating the incoming data. Serializers in Django are a part of the Django REST framework, a powerful and flexible toolkit for building Web APIs.
@@ -163,7 +175,7 @@ server and see something in the browser.
 6. URL -> View-> Serializer -> Model
 7. We first create a serializer that uses our model. We then create a view that uses our serializer. We then create a url pattern which when accessed will use the View. So when a http call is made to the url pattern defined, it calls the view thats is defined which inturn calls the serialiser which in turn uses the model.
 
-## Authentication
+### Authentication
 1. We are using Token Authentication.
 2. Well, basically you start by creating a token.
 3. So we need to provide an endpoint that accepts the user's username and password or the email address and password. And that is then going to create a new token in our database and return that token to the client.
@@ -174,3 +186,22 @@ server and see something in the browser.
 8. Cons of token auth is that the token needs to be stored on the client side so if someone gets hold of it, they can impersonate the user.
 9. Logging out happens on the client side and it works by deleting the token.
 10. Talk about how authentication works, see views file.
+
+## APIView vs ViewSets
+URL -> View-> Serializer -> Model
+Router -> ViewSet-> Serializer ->Model
+
+## Creating the DiagnosticTest API
+1. Create an app
+2. Delete some of the unncessary files like admin, model, migrations etc..
+3. Create the model, enalble it in Django Admin, create the migrations
+4. Create a serializer
+5. Create a APIView or ViewSet
+6. Create a urls.py to route the urls
+7. Update the main app urls.py to access the urls you set up for the diagnostic api.
+
+
+## Steps when creating a new Model
+1. Add the model to the models.py
+2. Enable this in the Django Admin.
+3. Then we run the migrations will create the migrations script to run on the database.

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 # Enable the custom apps we created
     'core',
     'user',
+    'diagnostictest',
 ]
 
 MIDDLEWARE = [
