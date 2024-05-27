@@ -3,12 +3,14 @@
 # Create your views here.
 from rest_framework import (
     viewsets,
+    mixins,
 )
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from core.models import (
     DiagnosticTest,
+    Tag,
 )
 from diagnostictest import serializers
 
@@ -68,3 +70,19 @@ class DiagnosticTestViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Create a new Diagnostic Test."""
         serializer.save(user=self.request.user)
+
+
+# We
+class TagViewSet(mixins.DestroyModelMixin,
+                 mixins.UpdateModelMixin,
+                 mixins.ListModelMixin,
+                 viewsets.GenericViewSet):
+    """Manage tags in the database."""
+    serializer_class = serializers.TagSerializer
+    queryset = Tag.objects.all()
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        """Filter queryset to authenticated user."""
+        return self.queryset.filter(user=self.request.user).order_by('-name')

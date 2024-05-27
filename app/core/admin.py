@@ -68,3 +68,5 @@ class UserAdmin(BaseUserAdmin):
 admin.site.register(models.User, UserAdmin)
 # Register the DiagnosticTest Model
 admin.site.register(models.DiagnosticTest)
+# Register the tags model
+admin.site.register(models.Tag)

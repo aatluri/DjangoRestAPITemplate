@@ -20,13 +20,14 @@ from diagnostictest import views
 # the name diagnostictests.
 # So what that will do is it will create a new endpoint API /diagnostictests.
 # and it will assign all of the different endpoints from our DiagnostocTest view set to that endpoint.
-# Basically what it means is that the recipe view set is going to have auto generated URLs depending on
+# Basically what it means is that the diagnostictest view set is going to have auto generated URLs depending on
 # the functionality that's enabled on the view set.
 # Because we're using the model view set, it's going to support all the available methods for create,
 # read, update and delete those i.e http get post, put patch and delete.
 # It will create and register endpoints for each of those options.
 router = DefaultRouter()
 router.register('diagnostictests', views.DiagnosticTestViewSet)
+router.register('tags', views.TagViewSet)
 
 # Then we define the name which is used to identify the name when we're doing the reverse lookup of URLs.
 app_name = 'diagnostictest'

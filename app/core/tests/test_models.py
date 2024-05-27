@@ -10,6 +10,12 @@ from django.contrib.auth import get_user_model
 from core import models
 
 
+# Helper method to create a user
+def create_user(email='user@example.com', password='testpass123'):
+    """Create a return a new user."""
+    return get_user_model().objects.create_user(email, password)
+
+
 class ModelTests(TestCase):
     """Test models."""
 
@@ -72,3 +78,15 @@ class ModelTests(TestCase):
         )
 
         self.assertEqual(str(diagnosticTest), diagnosticTest.title)
+
+# This test creates a user, creates a tag and assigns it to the user
+# it then asserts that the
+    def test_create_tag(self):
+        """Test creating a tag is successful."""
+        user = create_user()
+        tag = models.Tag.objects.create(user=user, name='Tag1')
+# Then we are checking when we convert this tag instance to a string using the str built in function,
+# it converts the tag name.
+# And the other thing it will test is just that we can simply create new tag instances because if we can't
+# create them, we're going to get an error.
+        self.assertEqual(str(tag), tag.name)

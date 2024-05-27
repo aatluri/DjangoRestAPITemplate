@@ -1,5 +1,7 @@
 # DiagnosticTestRecommender API
 
+https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/
+
 ## Explain what the project does
 ## Explain the general content of this code base i.e the different folders and files.
 ## Prerequisites to Run this Project
@@ -205,3 +207,7 @@ Router -> ViewSet-> Serializer ->Model
 1. Add the model to the models.py
 2. Enable this in the Django Admin.
 3. Then we run the migrations will create the migrations script to run on the database.
+4. Register the model in admin.py
+5. Then add a serialiser, view or viewset and update urls.py
+6. What are mixins and how do they work? https://medium.com/silicon-tribe-techdev/mixins-and-viewclasses-in-django-rest-framework-5dcd3a42617d
+7. Nested Serializers.
