@@ -72,17 +72,21 @@ class DiagnosticTestViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-# We
-class TagViewSet(mixins.DestroyModelMixin,
-                 mixins.UpdateModelMixin,
-                 mixins.ListModelMixin,
-                 viewsets.GenericViewSet):
+# The url methods that show up in the doc or that are allowed is based on the methods mentioned in Mixin
+class TagViewSet(viewsets.ModelViewSet):
     """Manage tags in the database."""
     serializer_class = serializers.TagSerializer
     queryset = Tag.objects.all()
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+# This method is used when we want list all the tags and ensures
+# that only the tags created by the current user are displayed
     def get_queryset(self):
         """Filter queryset to authenticated user."""
         return self.queryset.filter(user=self.request.user).order_by('-name')
+
+# This method is called during the tag creation and ensures that the current user is also saved along with the tag.
+    def perform_create(self, serializer):
+        """Create a new Tag."""
+        serializer.save(user=self.request.user)

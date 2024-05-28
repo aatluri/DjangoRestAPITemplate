@@ -207,6 +207,10 @@ class PrivateRecipeApiTests(TestCase):
         # We check that the user has not beed updated and is still self.user and not new_user.
         self.assertEqual(diagnostictest.user, self.user)
 
+# We create a diagnostic test using the helper method
+# We get the detail url ie the url which includes the diagnostictestid
+# Then we call the http delete method
+# Check the status code and that the diagnostictest doesnt exist.
     def test_delete_recipe(self):
         """Test deleting a recipe successful."""
         diagnostictest = create_diagnostictest(user=self.user)
@@ -217,6 +221,13 @@ class PrivateRecipeApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(DiagnosticTest.objects.filter(id=diagnostictest.id).exists())
 
+# We create a new user using the helper method
+# So we have 2 users ie the new_user and the user in self.user
+# We create a diagnostictest using the new_user
+# We get the detail url ie the url which includes the diagnostictestid
+# Then we call the http delete method using the self.user
+# Check the status code is 404 ie the diagnostictest was not found as it was not created by self.user
+# Check that the diagnostictest still exists.
     def test_recipe_other_users_recipe_error(self):
         """Test trying to delete another users recipe gives error."""
         new_user = create_user(email='user2@example.com', password='test123')
@@ -228,7 +239,12 @@ class PrivateRecipeApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
         self.assertTrue(DiagnosticTest.objects.filter(id=diagnostictest.id).exists())
 
-# COMMENTS FOR THIS CODE ***************
+# Create the paylod which includes 2 tags
+# Call the post method. This should create the diagnostictest
+# and also create the 2 tags and assign it to the diagnistoctest
+# Check the statuscode
+# Get the diagnoistictests assigned to this user. Check that the count is 1
+# Check that number of tags matches the number of tags in the payload and that their names match.
     def test_create_recipe_with_new_tags(self):
         """Test creating a recipe with new tags."""
         payload = {
@@ -251,7 +267,16 @@ class PrivateRecipeApiTests(TestCase):
             ).exists()
             self.assertTrue(exists)
 
-# COMMENTS FOR THIS CODE **************
+# Create a tag
+# Create the paylod which includes 2 tags. One tag should have the same name as the tag already created
+# Call the post method. This should create the diagnostictest
+# and also assign the 2 tags to the diagnistoctest. For the tag that was already created it
+# should just assign it. For the one that doesnt exist it should create and assign it.
+# Check the statuscode
+# Get the diagnoistictests assigned to this user. Check that the count is 1
+# Check that number of tags is still 2 and not 3.
+# i.e it should have only created one tag as the other was already there
+# Check that the tag names match.
     def test_create_diagnostictest_with_existing_tags(self):
         """Test creating a diagnostictest with existing tag."""
         tag_indian = Tag.objects.create(user=self.user, name='Indian')

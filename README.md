@@ -3,17 +3,22 @@
 https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/
 
 ## Explain what the project does
-## Explain the general content of this code base i.e the different folders and files.
+## Explain the general content of this code base i.e the different folders and files. What do the various apps do and where do we run the admin from or models or testing etc..
 ## Prerequisites to Run this Project
 ## Explain how to run this project
 ## Create a superuser & Go to Django Admin Interface
 ## Go to the API Documentation Page
 ## Explain what happens in the code when each of the APIs are called.
-## Steps if we want to reuse this codebase for another project.
-
+## Steps if we want to reuse this codebase for another project or on another machine.
+## What do we do if we want to create a new API based on a new model.
 
 ## Steps to setup this project
 ### See if we can download the Udemy Course content
+
+## Common Questions
+1. Why do we need an __init__.py
+2. Get some info on how models, views, serialisers , urls interact with each other. What objects are passed and how to access some of the often used data in them. For example how do we get the current user in a view , serialiser etc..
+3. What are mixins and how do they work? https://medium.com/silicon-tribe-techdev/mixins-and-viewclasses-in-django-rest-framework-5dcd3a42617d
 
 
 
@@ -40,31 +45,12 @@ https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/
 1. Linting checks your code formatting. We will be using flake 8.
 2. We will install flake 8
 3. Then we wll run our flake 8 tool through docker compose via the command 'docker-compose run --rm app sh -c "flake8"'
+4. List some important configuratins of flake8 that can be used.
 
-
-## Testing (Django Test Framework)
-1. We will be using the Django Test Suite to run our unit tests.
-2. We will set up the tests for each different Django app we create
-3. We will run the tests through Docker Compose with the command 'docker-compose run --rm app sh -c "python manage.py test"
-4. The Django test framework is built on top of the unit test library.ls
-5. The unit test library comes out of the box with Python, but the Django test framework adds some additional features to this library.
-6. That's useful when you're testing Django projects.
-7. Some of these additional features include things like the test client, which is a dummy web browser that you can use to make requests to your project.
-8. It also allows you to simulate authentication so you can handle authentication by overriding it for your unit tests, which is useful when you're running tests because you don't always want to have to handle the log in and registration process for your test.
-9. The Django test framework also comes with database integration.
-10. It automatically creates a temporary database for you and then it will automatically clear the data from that database.
-11. Once you've finished running each test on top of Django, we have the Django Rest framework, which also adds some additional testing features specifically useful for testing rest APIs.
-12. The main one that we'll be using is the API test client, which is just like the test client that Django provides, except it's specifically used for testing API requests.
-### Test Classes
-1. SimpleTestCase : Tests that dont need database integration
-2. TestCase : Tests that need database integration.
 
 ## Creating Unit tests
-1. We always first create a helper method that creates the object eg: user or diagnostic test
-2. We create a api client that can be used to call the respective http endpoints
-3. In the test we use the helper method to create the object
-4. We use the api client to call the url
-5. Then we compare the values .
+1. High level explanation of the various tests, helper methods needed, apiclients etc..
+2.
 
 
 ## Creating the Django Project
@@ -86,15 +72,7 @@ https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/
     urls.py
     wsgi.py
 
-## Run Our Development Server
-1. So now that we've actually created our Django project, we can finally go ahead and run our development
-server and see something in the browser.
-2. From the terminal run the following command: 'docker compose up' . This is the command for starting our services.
-3. Go to http://127.0.0.1:8000/ and you will see the Django Launch Page.
-4. So this is the template that is added for all default Django projects.
-5. This basically means that our project is working correctly and that we've configured everything with Docker.
-6. We are running the services inside Docker.
-7. To Stop the services, we can press Ctrl + C.
+
 
 ## Configure GitHub Actions
 1. GitHub Actions is an automation tool.
@@ -138,7 +116,7 @@ server and see something in the browser.
 3. To fix this race condition, we create another django app called Core and added a custom wait for db command which checks for the availability of the database before proceeding.
 
 
-## Database Migrartions
+## Database Migrations
 1. Django comes witn an ORM (Object Relational Mapper)
 2. The ORM serves as an abstraction layer between your data and your actual database.
 3. All the manual work of setting up tables, adding columns, sql statements to add data, change data etc.. are handledn by Django using the ORM.
@@ -209,5 +187,4 @@ Router -> ViewSet-> Serializer ->Model
 3. Then we run the migrations will create the migrations script to run on the database.
 4. Register the model in admin.py
 5. Then add a serialiser, view or viewset and update urls.py
-6. What are mixins and how do they work? https://medium.com/silicon-tribe-techdev/mixins-and-viewclasses-in-django-rest-framework-5dcd3a42617d
 7. Nested Serializers.

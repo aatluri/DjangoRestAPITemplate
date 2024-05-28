@@ -37,12 +37,16 @@ class DiagnosticTestSerializer(serializers.ModelSerializer):
 # By default a nested serializer is readonly. This would mean that if we left this as is, then
 # a tag would have to be created or updated first before it is assigned to a DiagnosticTest
 # If we want to be able to create the tag if it doesnt already exist when adding it to a DiagnosticTest
-# For this we would need to add custom logic but overriding the create diagnostic test method.
+# For this we would need to add custom logic but overriding the create and update diagnostic test method.
 
-# COMMENTS FOR THIS CODE *******
+# This method will take the tags as input and either get the tag if it already exists or create one if it diesnt exist
     def _get_or_create_tags(self, tags, diagnostictest):
         """Handle getting or creating tags as needed."""
+        # We first get the user
         auth_user = self.context['request'].user
+        # For each tag included, we call a helper method thats available in the model manager which
+        # gets the tag if it already exists and if not it creates a tag.
+        # Then we add the tag to the diagnostictest.
         for tag in tags:
             tag_obj, created = Tag.objects.get_or_create(
                 user=auth_user,
@@ -50,24 +54,34 @@ class DiagnosticTestSerializer(serializers.ModelSerializer):
             )
             diagnostictest.tags.add(tag_obj)
 
-# COMMENTS FOR THIS CODE ********
-
+# We override the create method so that we can also incude tags along with creating a diagnostictest
     def create(self, validated_data):
         """Create a diagnostictest."""
+# We first remove the tags from the request and store it in the tags variable
+# This is because we cant pass tags to the create method of diagnostic test as it only expects fields
+# and expects that tags will be assigned as a related field
         tags = validated_data.pop('tags', [])
+# We then create the diagnostictest
         diagnostictest = DiagnosticTest.objects.create(**validated_data)
+# We then call the method to get ot create tags.
         self._get_or_create_tags(tags, diagnostictest)
-
+# return the diagnostictest
         return diagnostictest
 
-# COMMENTS FOR THIS CODE *********
+# We override the update method so that we can also incude tags along with creating a diagnostictest
     def update(self, instance, validated_data):
         """Update diagnostictest."""
+        # We remove the tags from the update request validated data and store it in the tags variable
         tags = validated_data.pop('tags', None)
+# If the tags list contains something, then it clears the existing tags
+# One thing to note here is that None is not the same as an empty list.
+# So if an empty list was passed, it would enter this method and then would clear the existing tags
+# And then it calls the method which creates or gets the tags.
+# If its an empty list then no tags are created or retrieved
         if tags is not None:
             instance.tags.clear()
             self._get_or_create_tags(tags, instance)
-
+# Here we take the rest of the validated data and assign it to the instance.
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 
