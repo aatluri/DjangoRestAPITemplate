@@ -3,7 +3,7 @@
 https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/
 
 ## Explain what the project does
-## Explain the general content of this code base i.e the different folders and files. What do the various apps do and where do we run the admin from or models or testing etc..
+## Explain the general content of this code base i.e the different folders and files. What do the various apps do and where do we run the admin from or models or testing etc... What do we use for linting, testing, api docs etc..
 ## Prerequisites to Run this Project
 ## Explain how to run this project
 ## Create a superuser & Go to Django Admin Interface
@@ -50,8 +50,9 @@ https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/
 
 ## Creating Unit tests
 1. High level explanation of the various tests, helper methods needed, apiclients etc..
-2.
 
+## OpenAPI Doc/Swagger
+1. How to configure and manual config needed for non standard methods.
 
 ## Creating the Django Project
 1. We going to create our Django project and we're going to do it via Docker Compose.

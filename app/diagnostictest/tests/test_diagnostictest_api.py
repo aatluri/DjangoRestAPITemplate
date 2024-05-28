@@ -256,12 +256,12 @@ class PrivateRecipeApiTests(TestCase):
         res = self.client.post(DIAGNOSTICTEST_URL, payload, format='json')
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-        recipes = DiagnosticTest.objects.filter(user=self.user)
-        self.assertEqual(recipes.count(), 1)
-        recipe = recipes[0]
-        self.assertEqual(recipe.tags.count(), 2)
+        diagnostictests = DiagnosticTest.objects.filter(user=self.user)
+        self.assertEqual(diagnostictests.count(), 1)
+        diagnostictest = diagnostictests[0]
+        self.assertEqual(diagnostictest.tags.count(), 2)
         for tag in payload['tags']:
-            exists = recipe.tags.filter(
+            exists = diagnostictest.tags.filter(
                 name=tag['name'],
                 user=self.user,
             ).exists()
@@ -289,14 +289,105 @@ class PrivateRecipeApiTests(TestCase):
         res = self.client.post(DIAGNOSTICTEST_URL, payload, format='json')
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-        recipes = DiagnosticTest.objects.filter(user=self.user)
-        self.assertEqual(recipes.count(), 1)
-        recipe = recipes[0]
-        self.assertEqual(recipe.tags.count(), 2)
-        self.assertIn(tag_indian, recipe.tags.all())
+        diagnostictests = DiagnosticTest.objects.filter(user=self.user)
+        self.assertEqual(diagnostictests.count(), 1)
+        diagnostictest = diagnostictests[0]
+        self.assertEqual(diagnostictest.tags.count(), 2)
+        self.assertIn(tag_indian, diagnostictest.tags.all())
         for tag in payload['tags']:
-            exists = recipe.tags.filter(
+            exists = diagnostictest.tags.filter(
                 name=tag['name'],
                 user=self.user,
             ).exists()
             self.assertTrue(exists)
+
+# Create a diagnostictest with the helper method
+# create a payload with a tag
+# create the duagnostictest detail url with the diagnostictest created.
+# Call the patch method by passing the payload
+# Check that the status code 200 was returned
+# Check that a tag object was created with the name in the payload
+# Check that the tab created is mapped to the diagnostictest created.
+    def test_create_tag_on_update(self):
+        """Test create tag when updating a DiagnosticTest."""
+        diagnostictest = create_diagnostictest(user=self.user)
+
+        payload = {'tags': [{'name': 'Lunch'}]}
+        url = detail_url(diagnostictest.id)
+        res = self.client.patch(url, payload, format='json')
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        new_tag = Tag.objects.get(user=self.user, name='Lunch')
+        self.assertIn(new_tag, diagnostictest.tags.all())
+
+# We create a tag object named breakfast
+# We create a diagnostictest object
+# We update the diagnostictest with the tab object
+# We create a new tag object named lunch
+# We create a payload with a tag named lunch.
+# We create a detail url with the diagnostictest id created
+# We call the diagnostictest patch method.
+# We validate that the status code was 200
+# We validate that the breakfast and lunch tag objects exist and are mapped to the diagnostictest
+    def test_update_diagnostictest_assign_tag(self):
+        """Test assigning an existing tag when updating a recipe."""
+        tag_breakfast = Tag.objects.create(user=self.user, name='Breakfast')
+        diagnostictest = create_diagnostictest(user=self.user)
+        diagnostictest.tags.add(tag_breakfast)
+
+        tag_lunch = Tag.objects.create(user=self.user, name='Lunch')
+        payload = {'tags': [{'name': 'Lunch'}]}
+        url = detail_url(diagnostictest.id)
+        res = self.client.patch(url, payload, format='json')
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn(tag_lunch, diagnostictest.tags.all())
+        self.assertNotIn(tag_breakfast, diagnostictest.tags.all())
+
+# We create a tag object named Dessert
+# We create a diagnostictest object
+# We update the diagnostictest with the tag Dessert
+# We create a payload with an empty tags list
+# We create the diagnostictest detail url with the diagnostictest created
+# We call the patch method
+# We check that we got the status code 200
+# We check that the diagnostictest has no tags.
+    def test_clear_recipe_tags(self):
+        """Test clearing a recipes tags."""
+        tag = Tag.objects.create(user=self.user, name='Dessert')
+        diagnostictest = create_diagnostictest(user=self.user)
+        diagnostictest.tags.add(tag)
+
+        payload = {'tags': []}
+        url = detail_url(diagnostictest.id)
+        res = self.client.patch(url, payload, format='json')
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(diagnostictest.tags.count(), 0)
+
+# Create 2 diagnostictests r1 and r2
+# Create two tags tag1 and tag2.
+# Assign tag1 to r1 and tag2 to r2
+# Create another diagnostictest r3.
+# Do not assign any tags to r3.
+# Create the diagnostic url and call the get method by passing the ids of tag1 and tag2 in a comma separated list
+# Now we are expecting that only r1 and r2 should be in the response of the get call.
+# So we first serialiaze r1, r2 and r3 which is s1, s2 and s3
+# Then we check that only s1 and s2 are in the response.
+    def test_filter_by_tags(self):
+        """Test filtering recipes by tags."""
+        r1 = create_diagnostictest(user=self.user, title='Thai Vegetable Curry')
+        r2 = create_diagnostictest(user=self.user, title='Aubergine with Tahini')
+        tag1 = Tag.objects.create(user=self.user, name='Vegan')
+        tag2 = Tag.objects.create(user=self.user, name='Vegetarian')
+        r1.tags.add(tag1)
+        r2.tags.add(tag2)
+        r3 = create_diagnostictest(user=self.user, title='Fish and chips')
+        params = {'tags': f'{tag1.id},{tag2.id}'}
+        res = self.client.get(DIAGNOSTICTEST_URL, params)
+        s1 = DiagnosticTestSerializer(r1)
+        s2 = DiagnosticTestSerializer(r2)
+        s3 = DiagnosticTestSerializer(r3)
+        self.assertIn(s1.data, res.data)
+        self.assertIn(s2.data, res.data)
+        self.assertNotIn(s3.data, res.data)
