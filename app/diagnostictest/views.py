@@ -5,6 +5,7 @@ from drf_spectacular.utils import (
     extend_schema,
     OpenApiParameter,
     OpenApiTypes,
+
 )
 
 from rest_framework import (
@@ -75,7 +76,7 @@ class DiagnosticTestViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
         if tags:
             tag_ids = self._params_to_ints(tags)
-            # here we loop through the tags and filter the queryset
+            # here we loop through the tags and filter the queryset by each tag
             for t in tag_ids:
                 queryset = queryset.filter(tags__id=t)
             # by the end of this for loop only diagnostictest objects that contain all the tags will be returned.

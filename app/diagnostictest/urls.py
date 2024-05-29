@@ -2,6 +2,7 @@
 URL mappings for the recipe app.
 """
 
+
 # these are used to define a path and also to include URLs by the URL names.
 from django.urls import (
     path,

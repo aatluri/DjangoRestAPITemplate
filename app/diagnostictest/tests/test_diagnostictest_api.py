@@ -518,3 +518,12 @@ class PrivateRecipeApiTests(TestCase):
         self.assertIn(pivika_serialized.data, res.data)
         self.assertNotIn(serum_serialized.data, res.data)
         self.assertNotIn(viralload_serialized.data, res.data)
+
+        # We search by tags for female , hbv negative and blood exposure.
+        params = {'tags': f'{female.id},{hbvnegative.id},{bloodexposure.id}'}
+        res = self.client.get(DIAGNOSTICTEST_URL, params)
+        self.assertNotIn(fibroscan_serialized.data, res.data)
+        self.assertNotIn(afp_serialized.data, res.data)
+        self.assertNotIn(pivika_serialized.data, res.data)
+        self.assertIn(serum_serialized.data, res.data)
+        self.assertNotIn(viralload_serialized.data, res.data)
