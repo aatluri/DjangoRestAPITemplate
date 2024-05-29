@@ -365,17 +365,15 @@ class PrivateRecipeApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(diagnostictest.tags.count(), 0)
 
-# Create 2 diagnostictests r1 and r2
-# Create two tags tag1 and tag2.
-# Assign tag1 to r1 and tag2 to r2
-# Create another diagnostictest r3.
-# Do not assign any tags to r3.
-# Create the diagnostic url and call the get method by passing the ids of tag1 and tag2 in a comma separated list
-# Now we are expecting that only r1 and r2 should be in the response of the get call.
-# So we first serialiaze r1, r2 and r3 which is s1, s2 and s3
-# Then we check that only s1 and s2 are in the response.
+# This test creates 3 diagnostic tests and 2 tags. The first test is assigned the first tag.
+# The second test is assigned the second tag.
+# The third test is not assigned any tag
+# We then filter by both tags.
+# So we validate that none of the tests are returned as by including both tags in the filter parameters
+# we only want tests that have both tags.
     def test_filter_by_tags(self):
-        """Test filtering recipes by tags."""
+        """Test filtering Diagnostic Tests by tags """
+        """Check no tests are returned when there is no test with all the tags being search for."""
         r1 = create_diagnostictest(user=self.user, title='Thai Vegetable Curry')
         r2 = create_diagnostictest(user=self.user, title='Aubergine with Tahini')
         tag1 = Tag.objects.create(user=self.user, name='Vegan')
@@ -388,6 +386,135 @@ class PrivateRecipeApiTests(TestCase):
         s1 = DiagnosticTestSerializer(r1)
         s2 = DiagnosticTestSerializer(r2)
         s3 = DiagnosticTestSerializer(r3)
-        self.assertIn(s1.data, res.data)
-        self.assertIn(s2.data, res.data)
+        self.assertNotIn(s1.data, res.data)
+        self.assertNotIn(s2.data, res.data)
         self.assertNotIn(s3.data, res.data)
+
+# We want to verify the filter feature for the Basic Health Check ups
+    def test_filter_by_tags_exactmatch_basichealthcheckup(self):
+        """Test filtering recipes by tags with an exact match."""
+        """ Check that only tests with all the tags being searched for are returned."""
+        youngmale = Tag.objects.create(user=self.user, name='YoungMale')
+        oldmale = Tag.objects.create(user=self.user, name='OldMale')
+        youngfemale = Tag.objects.create(user=self.user, name='YoungFemale')
+        oldfemale = Tag.objects.create(user=self.user, name='OldFemale')
+        cbc = create_diagnostictest(user=self.user, title='CBC')
+        mammo = create_diagnostictest(user=self.user, title='Mammography')
+        psa = create_diagnostictest(user=self.user, title='PSA')
+        cbc.tags.add(youngmale)
+        cbc.tags.add(oldmale)
+        cbc.tags.add(youngfemale)
+        cbc.tags.add(oldfemale)
+        mammo.tags.add(youngfemale)
+        mammo.tags.add(oldfemale)
+        psa.tags.add(oldmale)
+
+        cbcs1 = DiagnosticTestSerializer(cbc)
+        mammos2 = DiagnosticTestSerializer(mammo)
+        psas3 = DiagnosticTestSerializer(psa)
+
+        # We search by tags oldmale
+        params = {'tags': f'{oldmale.id}'}
+        res = self.client.get(DIAGNOSTICTEST_URL, params)
+        self.assertIn(cbcs1.data, res.data)
+        self.assertIn(psas3.data, res.data)
+        self.assertNotIn(mammos2.data, res.data)
+
+    # We want to verify the filter feature for the HealthHistory based tests
+    def test_filter_by_tags_exactmatch_healthhistory(self):
+        """Test filtering recipes by tags with an exact match."""
+        """ Check that only tests with all the tags being searched for are returned."""
+        hrct = create_diagnostictest(user=self.user, title='HRCT')
+        pft = create_diagnostictest(user=self.user, title='PST')
+        spiometry = create_diagnostictest(user=self.user, title='SPIOMETRY')
+        impulseoscillometry = create_diagnostictest(user=self.user, title='IMPULSE OSCILLOMETRY')
+        fibroscan = create_diagnostictest(user=self.user, title='FIBROSCAN')
+        afp = create_diagnostictest(user=self.user, title='AFP')
+        pivika = create_diagnostictest(user=self.user, title='PIVIKA')
+        viralload = create_diagnostictest(user=self.user, title='VIRALLOAD')
+        serum = create_diagnostictest(user=self.user, title='SERUMHBSAGHIVHCV')
+
+        male = Tag.objects.create(user=self.user, name='Male')
+        female = Tag.objects.create(user=self.user, name='Female')
+        heavysmoker = Tag.objects.create(user=self.user, name='Heavy SMoker')
+        lightsmoker = Tag.objects.create(user=self.user, name='Light Smoker')
+        # nonsmoker = Tag.objects.create(user=self.user, name='Non Smoker')
+        heavydrinker = Tag.objects.create(user=self.user, name='Heavy Drinker')
+        occasionaldrinker = Tag.objects.create(user=self.user, name='Occasional Drinker')
+        # nondrinker = Tag.objects.create(user=self.user, name='Non Drinker')
+        hbvpositive = Tag.objects.create(user=self.user, name='HBV Positive')
+        hbvnegative = Tag.objects.create(user=self.user, name='HBV Negative')
+        bloodexposure = Tag.objects.create(user=self.user, name='Blood Exposure')
+        # nobloodexposure = Tag.objects.create(user=self.user, name='No Blood Exposure')
+
+        hrct.tags.add(male)
+        hrct.tags.add(female)
+        hrct.tags.add(heavysmoker)
+
+        pft.tags.add(male)
+        pft.tags.add(female)
+        pft.tags.add(heavysmoker)
+        pft.tags.add(lightsmoker)
+
+        spiometry.tags.add(male)
+        spiometry.tags.add(female)
+        spiometry.tags.add(heavysmoker)
+        spiometry.tags.add(lightsmoker)
+
+        impulseoscillometry.tags.add(male)
+        impulseoscillometry.tags.add(female)
+        impulseoscillometry.tags.add(heavysmoker)
+        impulseoscillometry.tags.add(lightsmoker)
+
+        fibroscan.tags.add(male)
+        fibroscan.tags.add(female)
+        fibroscan.tags.add(heavydrinker)
+
+        afp.tags.add(male)
+        afp.tags.add(female)
+        afp.tags.add(heavydrinker)
+        afp.tags.add(occasionaldrinker)
+
+        pivika.tags.add(male)
+        pivika.tags.add(female)
+        pivika.tags.add(heavydrinker)
+        pivika.tags.add(occasionaldrinker)
+
+        viralload.tags.add(male)
+        viralload.tags.add(female)
+        viralload.tags.add(hbvpositive)
+
+        serum.tags.add(male)
+        serum.tags.add(female)
+        serum.tags.add(hbvnegative)
+        serum.tags.add(bloodexposure)
+
+        hrct_serialized = DiagnosticTestSerializer(hrct)
+        pft_serialized = DiagnosticTestSerializer(pft)
+        spiometry_serialized = DiagnosticTestSerializer(spiometry)
+        impulseoscillometry_serialized = DiagnosticTestSerializer(impulseoscillometry)
+        fibroscan_serialized = DiagnosticTestSerializer(fibroscan)
+        afp_serialized = DiagnosticTestSerializer(afp)
+        pivika_serialized = DiagnosticTestSerializer(pivika)
+        viralload_serialized = DiagnosticTestSerializer(viralload)
+        serum_serialized = DiagnosticTestSerializer(serum)
+
+        # We search by tags for male and heavy smoker.
+        params = {'tags': f'{male.id},{heavysmoker.id}'}
+        res = self.client.get(DIAGNOSTICTEST_URL, params)
+        self.assertIn(hrct_serialized.data, res.data)
+        self.assertIn(pft_serialized.data, res.data)
+        self.assertIn(spiometry_serialized.data, res.data)
+        self.assertIn(impulseoscillometry_serialized.data, res.data)
+        self.assertNotIn(fibroscan_serialized.data, res.data)
+        self.assertNotIn(afp_serialized.data, res.data)
+        self.assertNotIn(pivika_serialized.data, res.data)
+
+        # We search by tags for female and heavy drinker.
+        params = {'tags': f'{female.id},{heavydrinker.id}'}
+        res = self.client.get(DIAGNOSTICTEST_URL, params)
+        self.assertIn(fibroscan_serialized.data, res.data)
+        self.assertIn(afp_serialized.data, res.data)
+        self.assertIn(pivika_serialized.data, res.data)
+        self.assertNotIn(serum_serialized.data, res.data)
+        self.assertNotIn(viralload_serialized.data, res.data)

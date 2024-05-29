@@ -65,7 +65,7 @@ class DiagnosticTestViewSet(viewsets.ModelViewSet):
 # Then we get a reference to the self.queryset. at this point the queryset contains all the diagnostictest objects.
 # We do this so that we can apply filters to the queryset and return the resulting filtered output.
 # Then if there are any tags, we first convert the comma separated tag ids to a list of integers
-# Then we filter the queryset based on diagnostic tests that have the tags which are in the tags_ids.
+# Then we filter the queryset based on diagnostic tests that have all the tags that are passed in.
 # This is the filtering syntax Django allows us to use for related fields on a database table.
 # Once this filtering is done, we apply the filter to only return the diagnostictests for the authenticated user
 # orderd by the diagnostictest id and a distinct set so that we dont have any duplicate values in the response.
@@ -75,7 +75,11 @@ class DiagnosticTestViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
         if tags:
             tag_ids = self._params_to_ints(tags)
-            queryset = queryset.filter(tags__id__in=tag_ids)
+            # here we loop through the tags and filter the queryset
+            for t in tag_ids:
+                queryset = queryset.filter(tags__id=t)
+            # by the end of this for loop only diagnostictest objects that contain all the tags will be returned.
+
         return queryset.filter(
             user=self.request.user
         ).order_by('-id').distinct()
