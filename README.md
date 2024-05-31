@@ -21,6 +21,45 @@ https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/
 3. What are mixins and how do they work? https://medium.com/silicon-tribe-techdev/mixins-and-viewclasses-in-django-rest-framework-5dcd3a42617d
 
 
+## Understand the deployment of this project
+### Steps
+1. Setup a proxy (reverse proxy)
+2. Handle Static & media files through this proxy
+3. Cofigure our app on the server.
+
+### Components
+1. WSGI service - WebserviceGatewayInterface that runs the python code that powers our Django application
+2. Persistant Data - When we use containers like Docker etc.., these are stateless ie they shouldnt store any data related to the current state of the application. For example if a user uploads a file, it should be stored in a persistent volume that can be accessed by the containers that are running or other containers that you store in your service.
+3. Reverse Proxy - So this is what's going to accept the requests into our application. So any request that comes from the Internet, it's not going to go directly to our Django service or WSGI service. It's going to go through a proxy. The reason we need a proxy is due to the following reason :
+A WSGI server is great at executing python code but its not effecient at executing Javascript, static content like images etc... especially when the load is high. A webserver on the other hand is great at handling these types of requests. So we set up a reverse proxy using a web server application that allows us to serve files that the webserver serves effeciently and sent the rest to the WSGI server so that it can be handled by the python code.
+
+### Applications
+1. nginx - a webserver . its open source, fast and production grade. We use it to set up the reverse proxy
+2. uWSGI - the wsgi server
+3. Docker Compose - to pull all these services together and serve them on our server.
+
+### Diagram of different services and volumes
+![Alt text](images/DeploymentOverview.jpeg)
+1. App service will be used to run our application using the uWSGI server. This will server our Django Application
+2. We will be using a Postgres database to store the persistent data
+3. The proxy or reverse prixy engine service which will handle the requests to our application.
+4. We will have a static volume that will be used to store static files like CSS, Javascript , media files etc..
+5. We will have another volume that will store the persistent data for the database.
+
+So when a user makes a request
+1. they're going to be making the request to the proxy or to the reverse proxy. That's the nginx server that's running.
+2. Then, depending on the URL of that request, if it's for a static file, we're going to afford it straight to the volume. So Engine X is going to serve the file directly if they're trying to access a static file.So they're trying to access something like a JavaScript file, a PNG or some kind of image. Then this is going to be sent directly from the volume by our proxy and our Django app never needs to hear about these requests.
+3. However, if the request is not for a static file, then it will get forwarded to the uWSGI server that's running our application. This way, our application can fulfill the request and return the response to the user.
+
+### Handling Configuration
+1. We cant store our configurations in git as its not secure.
+2. We need a way to set proper credentials and things inside our server when we deploy our application.
+3. We will be using environment variables.
+4. We create a .env file on the server
+5. We set the values inside Docker Compose. We can pass configuration values from the .env file to into the applications we are running in our services
+
+
+
 
 ## GitHub Project & Docker Hub
 1. Ensure you have github account

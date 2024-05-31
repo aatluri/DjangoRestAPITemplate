@@ -32,6 +32,7 @@ services:
 # Every time we change a line of code, we want to automatically sync the code in our project to the cloud running in the container.
     volumes:
       - ./app:/app
+      - dev-static-data:/vol/web
 # Finally we have the commands that we want to run
 # First we run the wait for db command
 # Then we run the migrate command
@@ -72,6 +73,7 @@ services:
 # The indentation for this matches that of services.
 volumes:
   dev-db-data:
+  dev-static-data:
 
 # Run docker-compose build to build the docker container. So it effectively does the same as Docker build.
 # Run docker-compose up to run the development server.
