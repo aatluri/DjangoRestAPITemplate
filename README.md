@@ -58,6 +58,28 @@ So when a user makes a request
 4. We create a .env file on the server
 5. We set the values inside Docker Compose. We can pass configuration values from the .env file to into the applications we are running in our services
 
+### Proxy Folder
+1. As I mentioned previously, we're going to be using an application called nginX, and in order to use nginX, we need to add some configuration files to our product that tell nginX how to run our application.
+2. default.conf.tpl : template configuration file that's going to be used by our Docker file in order to apply the custom configuration values to the application. The reason why we call it .TPL is because we're not going to be using this file directly when we run our proxy. We're going to be passing it through something in order to set some values in the file that sets the real file on the server.
+So the main block we have here starting on line one is the configuration block for the server.
+Listen_port is the port that the server will be listening on. Its set using an environment variable thats passed to our application
+location blocks are ways that you can map different URL mappings for that passed into the server requests and you can map them to different places on the system.
+So any your row that starts with /static will go to an alias called Vol/Static which has a volume containing the static and media files for our application.
+The next location block handles all the requests that aernt met by the above location block.
+So nginx will first check if the request matches /static. If it does then it will pass it to alias and stop executing the request. if it doesnt match then  it will pass it to the second location block.
+In the second config block, we are configuring the server by app host and app port. this will tell the nginx server what host and port on the uwsgi server to connect to.
+Include helps us include the uwsgi parameters which are required for the http request to be processed in wsgi
+Next, we have client max body size. This is the maximum body size of the request that will be passed. So it basically means here that the maximum image that can be uploaded will be ten megabytes.
+3. Uwsgi_params - required for the http request to be processed in wsgi
+4. Run.sh : Shell script that starts our proxy service
+
+
+### Scripts Folder - run.sh
+
+
+### Docker Compose Deploy
+The docker-compose.yml is used for local development. The docker-compose-deploy.yml is used for deployment.
+
 
 
 

@@ -51,14 +51,15 @@ services:
       - DB_NAME=devdb
       - DB_USER=devuser
       - DB_PASS=changeme
+      - DEBUG=1
 # Tells Docker compose that the app service depends on the db service. it will wait for the db service to start.
     depends_on:
       - db
 # create a service called db
-  db:
 # This is the image we are going to be using from Docker Hub. You can find more images at https://hub.docker.com/_/postgres
-    image: postgres:13-alpine
 # This is the vilume we created below and the path is where the data is persisted.
+  db:
+    image: postgres:13-alpine
     volumes:
       - dev-db-data:/var/lib/postgresql/data
 # We set these environments variables to set the initial database configuration of the db service
@@ -89,3 +90,5 @@ volumes:
 # http://127.0.0.1:8000/admin/login/?next=/admin/ to access the admin page
 # Superuser: admin@example.com , password=12345
 # However it does it via the Docker file, so it builds and tags the images appropriately for running our Docker compose configuration.
+# Run docker-compose -f docker-compose-deploy.yml down to clear any running containers.
+# Run docker-compose -f docker-compose-deploy.yml up to run the application

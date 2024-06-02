@@ -1,0 +1,64 @@
+# version: "3.9"
+
+# The first few lines are similar to the docker-compose.yml file.
+# restart - if the app crashes it restarts automatically
+#volumes - the volumes that we will store our static data in
+# We define the environment variables. So these are all configuration values
+# that we're going to set when we run our application on our server
+# that we have depends on which just sets up the dependency to make sure the database starts first and
+# also is accessible through the network.
+services:
+  app:
+    build:
+      context: .
+    restart: always
+    volumes:
+      - static-data:/vol/web
+    environment:
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - SECRET_KEY=${DJANGO_SECRET_KEY}
+      - ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
+    depends_on:
+      - db
+# db similar to docker-compose.yml
+  db:
+    image: postgres:13-alpine
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+
+# So this is the reverse proxy that we're going to create.
+# We change the context to /.proxy, And we do that because we want to build this
+# particular image for this service from the proxy directory.
+# restart always ensures if there is an error, the application will restart.
+# the db services depends on the app service. So all the requests come through the
+# proxy and they get forwarded to the app if necessary.
+# So the proxy depends on the app service running before our proxy is started.
+# We map port 80 to 8000 on the running host ie inside our docker container
+# We set the volumes for statuc data
+# When running locally it should be 8000:8000 as posrt 80 will already be in use. When running in production it should be 80:8000
+  proxy:
+    build:
+      context: ./proxy
+    restart: always
+    depends_on:
+      - app
+    ports:
+      - 80:8000
+    volumes:
+      - static-data:/vol/static
+
+# Define our volumes block.
+# these should match the volumes we created abovc for static-data and the volume for postgresdata.
+volumes:
+  postgres-data:
+  static-data:
+
+
