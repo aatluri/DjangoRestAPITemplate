@@ -2,18 +2,17 @@
 
 https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/
 
-## Explain what the project does
-## Explain the general content of this code base i.e the different folders and files. What do the various apps do and where do we run the admin from or models or testing etc... What do we use for linting, testing, api docs etc..
-## Prerequisites to Run this Project
-## Explain how to run this project
-## Create a superuser & Go to Django Admin Interface
-## Go to the API Documentation Page
-## Explain what happens in the code when each of the APIs are called.
-## Steps if we want to reuse this codebase for another project or on another machine.
-## What do we do if we want to create a new API based on a new model.
+## Contents
+1. Explain what the project does
+2. Explain the general content of this code base i.e the different folders and files. What do the various apps do and where do we run the admin from or models or testing etc... What do we use for linting, testing, api docs etc..
+3. Prerequisites to Run this Project
+4. Explain how to run this project
+5. Create a superuser & Go to Django Admin Interface
+6. Go to the API Documentation Page
+7. Explain what happens in the code when each of the APIs are called.
+8. Steps if we want to reuse this codebase for another project or on another machine.
+9. What do we do if we want to create a new API based on a new model.
 
-## Steps to setup this project
-### See if we can download the Udemy Course content
 
 ## Common Questions
 1. Why do we need an __init__.py
@@ -21,7 +20,7 @@ https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/
 3. What are mixins and how do they work? https://medium.com/silicon-tribe-techdev/mixins-and-viewclasses-in-django-rest-framework-5dcd3a42617d
 
 
-## Understand the deployment of this project
+## Deployment
 ### Steps
 1. Setup a proxy (reverse proxy)
 2. Handle Static & media files through this proxy
@@ -74,11 +73,25 @@ Next, we have client max body size. This is the maximum body size of the request
 4. Run.sh : Shell script that starts our proxy service
 
 
-### Scripts Folder - run.sh
+### Deployment Process Summary
+You can think of this Django application having the following:
+1. The Python code
+2. The database
+3. Static files like the CSS , HTML , images etc..
 
+All our python code is executed by the uWSGI server.
+The database is the PostGres database
+The static files like css, html, images etc.. are executed by the nginx web server.
+We also have a proxy service which is used to route user requests based on what the request needs.
+If its a request for a static file, then its routed to the ngix server. If its any other request then its routed to the uwsgi server.
 
-### Docker Compose Deploy
-The docker-compose.yml is used for local development. The docker-compose-deploy.yml is used for deployment.
+Now if you look in the docker-compose-deploy.yml file, you will see three services.
+The app service is used to run our application using the uwsgi server
+The db service is for the database which in our case is the PostGres database.
+The proxy service is to set up our web server which hosts the proxy as well as the nginx web server. All the configurations and other things needed to bring up the proxy is in the proxy folder.
+
+So when we run the docker-compose-deploy up command to bring up our application, first the db , app and proxy services are brought up. The order is enforced by the depends on command in the docker-compose-deploy file.
+Then the /scripts/run.sh is executed which executes the commands to bring up our service. In the run.sh file, we first ensure that the database is up and running, then we ensure all our static files are copied to a directory which is accessible to the nginx reverse proxy. Then we run the migrations so that the database is upto date. Then we start up the uwsgi server by ensuring that the nginx proxy serice can connet to it. We also mention the number of uwsgi workers needed etc.. and then we also tell it to run the wsgi file in our app folder which ensures that all our Django python apps and their code will be running and reasy to be executed.
 
 
 
