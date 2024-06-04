@@ -3,15 +3,18 @@
 https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/
 
 ## Contents
-1. Explain what the project does
-2. Explain the general content of this code base i.e the different folders and files. What do the various apps do and where do we run the admin from or models or testing etc... What do we use for linting, testing, api docs etc..
-3. Prerequisites to Run this Project
-4. Explain how to run this project
-5. Create a superuser & Go to Django Admin Interface
-6. Go to the API Documentation Page
-7. Explain what happens in the code when each of the APIs are called.
-8. Steps if we want to reuse this codebase for another project or on another machine.
-9. What do we do if we want to create a new API based on a new model.
+1. What was your motivation?
+2. Why did you build this project?
+3. What problem does it solve?
+4. Explain what the project does
+5. Explain the general content of this code base i.e the different folders and files. What do the various apps do and where do we run the admin from or models or testing etc... What do we use for linting, testing, api docs etc..
+6. Prerequisites to Run this Project
+7. Explain how to run this project
+8. Create a superuser & Go to Django Admin Interface
+9. Go to the API Documentation Page
+10. Explain what happens in the code when each of the APIs are called.
+11. Steps if we want to reuse this codebase for another project or on another machine.
+12. What do we do if we want to create a new API based on a new model.
 
 
 ## Common Questions
