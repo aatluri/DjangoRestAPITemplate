@@ -2,26 +2,43 @@
 
 https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/
 
-## Contents
-1. What was your motivation?
-2. Why did you build this project?
-3. What problem does it solve?
-4. Explain what the project does
-5. Explain the general content of this code base i.e the different folders and files. What do the various apps do and where do we run the admin from or models or testing etc... What do we use for linting, testing, api docs etc..
-6. Prerequisites to Run this Project
-7. Explain how to run this project
-8. Create a superuser & Go to Django Admin Interface
-9. Go to the API Documentation Page
-10. Explain what happens in the code when each of the APIs are called.
-11. Steps if we want to reuse this codebase for another project or on another machine.
-12. What do we do if we want to create a new API based on a new model.
+## Motivation behind this project
+
+## What problem does it solve
+
+## What does this project do
+
+## Contents of this code base
+Explain the general content of this code base i.e the different folders and files. What do the various apps do, what auth doe we use, where do we run the admin from or models or testing etc... What do we use for linting, testing, api docs etc..
+
+## Build & Deploy this project locally
+
+## Documentation & Usage post local deployment 
+
+## Build & Deploy this project to the AWS Cloud
+
+## Documentation & Usage post cloud deployment 
 
 
-## Common Questions
+## Commonly used Commands
+
+## Quick summary of some Django Concepts
 1. Why do we need an __init__.py
 2. Get some info on how models, views, serialisers , urls interact with each other. What objects are passed and how to access some of the often used data in them. For example how do we get the current user in a view , serialiser etc..
 3. What are mixins and how do they work? https://medium.com/silicon-tribe-techdev/mixins-and-viewclasses-in-django-rest-framework-5dcd3a42617d
+4. What do we do if we want to create a new API based on a new model.
+   
+## Troubleshooting
+1. Sometimes when we make changes to the settings or other files and you get weird errors, try to build the project again and then run the application.
+2. Dockerfile name
+3. Versions of things like docker, docker-compose if you are using this project in the future.
 4. Sometimes when we make changes to the settings or other files and you get weird errors, try to build the project again and then run the application.
+   
+
+## Reuse this codebase for another project
+
+
+
 
 
 ## Deployment
