@@ -18,6 +18,7 @@ https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/
 1. Why do we need an __init__.py
 2. Get some info on how models, views, serialisers , urls interact with each other. What objects are passed and how to access some of the often used data in them. For example how do we get the current user in a view , serialiser etc..
 3. What are mixins and how do they work? https://medium.com/silicon-tribe-techdev/mixins-and-viewclasses-in-django-rest-framework-5dcd3a42617d
+4. Sometimes when we make changes to the settings or other files and you get weird errors, try to build the project again and then run the application.
 
 
 ## Deployment
@@ -93,7 +94,53 @@ The proxy service is to set up our web server which hosts the proxy as well as t
 So when we run the docker-compose-deploy up command to bring up our application, first the db , app and proxy services are brought up. The order is enforced by the depends on command in the docker-compose-deploy file.
 Then the /scripts/run.sh is executed which executes the commands to bring up our service. In the run.sh file, we first ensure that the database is up and running, then we ensure all our static files are copied to a directory which is accessible to the nginx reverse proxy. Then we run the migrations so that the database is upto date. Then we start up the uwsgi server by ensuring that the nginx proxy serice can connet to it. We also mention the number of uwsgi workers needed etc.. and then we also tell it to run the wsgi file in our app folder which ensures that all our Django python apps and their code will be running and reasy to be executed.
 
+Now you are doing all of this on your machine. Which means when you run the docker-compose-deploy up on your machine, it spins up a docker image and then on that image it runs all the services you have defined and brings up your application and so when you access the localhost url you are able to access your application. But since you want your application to be used by users across the internet, instead of using your machine , you need a virtual server in the cloud where you can run the docker-compose-deploy command and all this setup is run there and you app can then be accessed by users across the internet. We use AWS EC2 for the virtual server.
 
+## AWS
+1. Create an IAM user incase you do not already have one
+2. Create the public private key pair in the /Users/adarshatluri/.ssh folder. Create the .ssh folder if it doesnt exist
+3. Run the "ssh-keygen -t rsa -b 4096" to generate the private key public key pair.
+4. Using the public key, import a key pair in AWS
+5. Create an EC2 instance and include this keypair you imported.
+6. Use the steps mentioned in the connect section of AWS in the EC2 instance tab to connect via ssh.
+7. Run the below command from the folder containing the keys ssh -i "adarsh-local-machine.pem" ec2-user@ec2-34-219-62-6.us-west-2.compute.amazonaws.com
+8. Set up Githib deploy key . Run the  "ssh-keygen -t ed25519 -b 4096" in the terminal once you have ssh'd into the ec2 instance.
+9. We then run "cat ~/.ssh/id_ed25519.pub" to display the public key.
+10. Go to your github account -> the project repo -> settings -> Add deploy keys. And add the deploy key.
+
+## Server Setup
+### Creating an SSH Deploy Key
+To create a new SSH key which can be used as the deploy key, run the command below:
+
+ssh-keygen -t ed25519 -b 4096
+Note: This will create a new ed25519 key, which is the recommended key for GitHub.
+
+To display the public key, run:
+
+cat ~/.ssh/id_ed25519.pub
+### Install and Configure Depdencies
+Use the below commands to configure the EC2 virtual machine running Amazon Linux 2.
+
+Install Git:
+
+sudo yum install git -y
+Install Docker, make it auto start and give ec2-user permissions to use it:
+
+sudo yum install docker -y
+sudo systemctl enable docker.service
+sudo systemctl start docker.service
+sudo usermod -aG docker ec2-user
+Note: After running the above, you need to logout by typing exit and re-connect to the server in order for the permissions to come into effect.
+
+Install Docker Compose:
+
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.27.1}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+Running Docker Service
+Cloning Code
+Use Git to clone your project:
+
+git clone <project ssh url>
 
 
 ## GitHub Project & Docker Hub
