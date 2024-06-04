@@ -2,11 +2,18 @@
 
 https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/
 
+## What does this project do
+1. This is a ready to go Django REST API project template that can be deployed as is locally as well as to the cloud like AWS or any other cloud servide.
+2. It exposes endpoints that allow us to create/update/delete users who will be accessing this endpoint
+3. It exposes endoints that allow us to create/update/delete diagnostic tests eg: blood tests, fasting sugar, health checkup tests etc.. But with minimal textual changes, it can be used to expose entities like recipies
+
 ## Motivation behind this project
+I have found that in many cases while working on real world projects or ideas, we spend more time on tasks like setting up the project skeleton, 
+
 
 ## What problem does it solve
 
-## What does this project do
+
 
 ## Contents of this code base
 Explain the general content of this code base i.e the different folders and files. What do the various apps do, what auth doe we use, where do we run the admin from or models or testing etc... What do we use for linting, testing, api docs etc..
