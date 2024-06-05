@@ -3,16 +3,20 @@
 https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/
 
 ## What does this project do
-1. This is a ready to go Django REST API project template that can be deployed as is locally as well as to the cloud like AWS or any other cloud servide.
-2. It exposes endpoints that allow us to create/update/delete users who will be accessing this endpoint
-3. It exposes endoints that allow us to create/update/delete diagnostic tests eg: blood tests, fasting sugar, health checkup tests etc.. But with minimal textual changes, it can be used to expose entities like recipies
+1. This is a ready to go Django REST API project template
+2. It has a complete CICD pipeline using GitHub Actions
+3. The CICD Pipeline includes, linting, testing and deployment.
+4. The project can be deployed locally as well as to the cloud like AWS or any other cloud servide.
+6. It exposes REST endpoints that allow us to create/update/delete users who will be accessing this endpoint
+7. It exposes REST endoints that allow us to create/update/delete an entity.
+9. It provides the capability to assign tags to the entity being exposed and also has a search capability that allows us to filter the entity based on these tags.
+10. It also has API documentation implemented.
 
 ## Motivation behind this project
-I have found that in many cases while working on real world projects or ideas, we spend more time on tasks like setting up the project skeleton, 
-
-
-## What problem does it solve
-
+1. While working on real world projects or ideas, we spend more time on tasks like project setup, cicd pipeline set up, deployment, documentation than on the actual implementation of our idea.
+2. This project provides you a boiler plate project template with all the necessary things built in.
+3. All you need to do is download this code base and follow a few simple steps to get it running on your machine or on AWS.
+4. Then you can extend the logic inside this already deployed project to suit your needs.
 
 
 ## Contents of this code base
