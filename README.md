@@ -55,8 +55,6 @@ Explain the general content of this code base i.e the different folders and file
 4. Sometimes when we make changes to the settings or other files and you get weird errors, try to build the project again and then run the application.
    
 
-## Reuse this codebase for another project
-
 
 
 
@@ -350,3 +348,20 @@ Router -> ViewSet-> Serializer ->Model
 4. Register the model in admin.py
 5. Then add a serialiser, view or viewset and update urls.py
 7. Nested Serializers.
+
+## Detailed Explanation of the contents of the DiagnosticTestRecommender/app Folder
+### Root level App Folder
+
+### app/app 
+
+### app/core
+
+### app/user
+
+### app/diagnostictest
+
+### app/images
+
+### app/proxy
+
+### app/scripts
