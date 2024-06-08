@@ -2,23 +2,61 @@
 
 https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/
 
-## Contents
-1. Explain what the project does
-2. Explain the general content of this code base i.e the different folders and files. What do the various apps do and where do we run the admin from or models or testing etc... What do we use for linting, testing, api docs etc..
-3. Prerequisites to Run this Project
-4. Explain how to run this project
-5. Create a superuser & Go to Django Admin Interface
-6. Go to the API Documentation Page
-7. Explain what happens in the code when each of the APIs are called.
-8. Steps if we want to reuse this codebase for another project or on another machine.
-9. What do we do if we want to create a new API based on a new model.
+## What does this project do
+1. This is a ready to go Django REST API project template
+2. It has a complete CICD pipeline using GitHub Actions
+3. The CICD Pipeline includes, linting, testing and deployment.
+4. The project can be deployed locally as well as to the cloud like AWS or any other cloud servide.
+6. It exposes REST endpoints that allow us to create/update/delete users who will be accessing this endpoint
+7. It exposes REST endoints that allow us to create/update/delete an entity.
+9. It provides the capability to assign tags to the entity being exposed and also has a search capability that allows us to filter the entity based on these tags.
+10. It also has API documentation implemented.
+
+## Motivation behind this project
+1. While working on real world projects or ideas, we spend more time on tasks like project setup, cicd pipeline set up, deployment, documentation than on the actual implementation of our idea.
+2. This project provides you a boiler plate project template with all the necessary things built in.
+3. All you need to do is download this code base and follow a few simple steps to get it running on your machine or on AWS.
+4. Then you can extend the logic inside this already deployed project to suit your needs.
 
 
-## Common Questions
+## Contents of this code base
+This code base as mentioned above is a Django REST API application.
+It has the following folders at the root level:
+1. .github/workflows -  This is a yaml configuration file is used by github actions for the cicd pipeline. We define what actions we want github to run when we push code to the master branch.
+2. app folder - This contains all of the Django project files. It consists of the the multiple django apps we define for our application. It has the following contents:
+   - app : This is the main Django app folder that consists of the main Django files like settings.py, the urls that are exposed , the swagger documentation url etc..
+        - __init__.py : the __init__.py file is used to mark a directory as a Python package. it comes by default when you create a Django project
+
+   - core : This is a Django app that consists of functionality like the Djang admin page, the models that are used in this app, Django commands that we want to run before startup of the main app
+
+Explain the general content of this code base i.e the different folders and files. What do the various apps do, what auth doe we use, where do we run the admin from or models or testing etc... What do we use for linting, testing, api docs etc..
+
+## Build & Deploy this project locally
+
+## Documentation & Usage post local deployment
+
+## Build & Deploy this project to the AWS Cloud
+
+## Documentation & Usage post cloud deployment
+
+
+## Commonly used Commands
+
+## Quick summary of some Django Concepts
 1. Why do we need an __init__.py
 2. Get some info on how models, views, serialisers , urls interact with each other. What objects are passed and how to access some of the often used data in them. For example how do we get the current user in a view , serialiser etc..
 3. What are mixins and how do they work? https://medium.com/silicon-tribe-techdev/mixins-and-viewclasses-in-django-rest-framework-5dcd3a42617d
+4. What do we do if we want to create a new API based on a new model.
+
+## Troubleshooting
+1. Sometimes when we make changes to the settings or other files and you get weird errors, try to build the project again and then run the application.
+2. Dockerfile name
+3. Versions of things like docker, docker-compose if you are using this project in the future.
 4. Sometimes when we make changes to the settings or other files and you get weird errors, try to build the project again and then run the application.
+
+
+
+
 
 
 ## Deployment
@@ -96,18 +134,19 @@ Then the /scripts/run.sh is executed which executes the commands to bring up our
 
 Now you are doing all of this on your machine. Which means when you run the docker-compose-deploy up on your machine, it spins up a docker image and then on that image it runs all the services you have defined and brings up your application and so when you access the localhost url you are able to access your application. But since you want your application to be used by users across the internet, instead of using your machine , you need a virtual server in the cloud where you can run the docker-compose-deploy command and all this setup is run there and you app can then be accessed by users across the internet. We use AWS EC2 for the virtual server.
 
-## AWS - EC2 Instcnace Creation & Set up
+## AWS
 1. Create an IAM user incase you do not already have one
 2. Create the public private key pair in the /Users/adarshatluri/.ssh folder. Create the .ssh folder if it doesnt exist
 3. Run the "ssh-keygen -t rsa -b 4096" to generate the private key public key pair.
 4. Using the public key, import a key pair in AWS
 5. Create an EC2 instance and include this keypair you imported.
 6. Use the steps mentioned in the connect section of AWS in the EC2 instance tab to connect via ssh.
-7. Run the below command from the folder containing the keys ssh -i "adarsh-local-machine.pem" ec2-user@ec2-34-219-62-6.us-west-2.compute.amazonaws.com
+7. Run the below command from the folder containing the keys ssh -i "id_rsa" ec2-user@ec2-34-219-62-6.us-west-2.compute.amazonaws.com
 8. Set up Githib deploy key . Run the  "ssh-keygen -t ed25519 -b 4096" in the terminal once you have ssh'd into the ec2 instance.
 9. We then run "cat ~/.ssh/id_ed25519.pub" to display the public key.
 10. Go to your github account -> the project repo -> settings -> Add deploy keys. And add the deploy key.
 
+## Server Setup
 ### Creating an SSH Deploy Key
 To create a new SSH key which can be used as the deploy key, run the command below:
 
@@ -117,7 +156,6 @@ Note: This will create a new ed25519 key, which is the recommended key for GitHu
 To display the public key, run:
 
 cat ~/.ssh/id_ed25519.pub
-
 ### Install and Configure Depdencies
 Use the below commands to configure the EC2 virtual machine running Amazon Linux 2.
 
@@ -136,37 +174,11 @@ Install Docker Compose:
 
 sudo curl -L "https://github.com/docker/compose/releases/download/v2.27.1}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
-
-Git - Cloning Code
+Running Docker Service
+Cloning Code
 Use Git to clone your project:
 
 git clone <project ssh url>
-
-Running the Service
-docker-compose -f docker-compose-deploy.yml up -d
-
-To stop the service, run:
-
-docker-compose -f docker-compose-deploy.yml down
-
-To stop service and remove all data, run:
-
-docker-compose -f docker-compose-deploy.yml down --volumes
-
-To view container logs, run:
-
-docker-compose -f docker-compose-deploy.yml logs
-
-If you push new versions, pull new changes to the server by running the following command:
-
-git pull origin
-Then, re-build the app image so it includes the latest code by running:
-
-docker-compose -f docker-compose-deploy.yml build app
-To apply the update, run:
-
-docker-compose -f docker-compose-deploy.yml up --no-deps -d app
-The --no-deps -d ensures that the dependant services (such as proxy) do not restart.
 
 
 ## GitHub Project & Docker Hub
@@ -336,3 +348,20 @@ Router -> ViewSet-> Serializer ->Model
 4. Register the model in admin.py
 5. Then add a serialiser, view or viewset and update urls.py
 7. Nested Serializers.
+
+## Detailed Explanation of the contents of the DiagnosticTestRecommender/app Folder
+### Root level App Folder
+
+### app/app
+
+### app/core
+
+### app/user
+
+### app/diagnostictest
+
+### app/images
+
+### app/proxy
+
+### app/scripts
