@@ -52,7 +52,17 @@ Explain the general content of this code base i.e the different folders and file
 1. Sometimes when we make changes to the settings or other files and you get weird errors, try to build the project again and then run the application.
 2. Dockerfile name
 3. Versions of things like docker, docker-compose if you are using this project in the future.
+4. What do we do if we want to create a new API based on a new model.
+
+## Troubleshooting
+1. Sometimes when we make changes to the settings or other files and you get weird errors, try to build the project again and then run the application.
+2. Dockerfile name
+3. Versions of things like docker, docker-compose if you are using this project in the future.
 4. Sometimes when we make changes to the settings or other files and you get weird errors, try to build the project again and then run the application.
+
+
+
+
 
 
 
@@ -141,6 +151,7 @@ Now you are doing all of this on your machine. Which means when you run the dock
 4. Using the public key, import a key pair in AWS
 5. Create an EC2 instance and include this keypair you imported.
 6. Use the steps mentioned in the connect section of AWS in the EC2 instance tab to connect via ssh.
+7. Run the below command from the folder containing the keys ssh -i "id_rsa" ec2-user@ec2-34-219-62-6.us-west-2.compute.amazonaws.com
 7. Run the below command from the folder containing the keys ssh -i "id_rsa" ec2-user@ec2-34-219-62-6.us-west-2.compute.amazonaws.com
 8. Set up Githib deploy key . Run the  "ssh-keygen -t ed25519 -b 4096" in the terminal once you have ssh'd into the ec2 instance.
 9. We then run "cat ~/.ssh/id_ed25519.pub" to display the public key.
@@ -348,6 +359,23 @@ Router -> ViewSet-> Serializer ->Model
 4. Register the model in admin.py
 5. Then add a serialiser, view or viewset and update urls.py
 7. Nested Serializers.
+
+## Detailed Explanation of the contents of the DiagnosticTestRecommender/app Folder
+### Root level App Folder
+
+### app/app
+
+### app/core
+
+### app/user
+
+### app/diagnostictest
+
+### app/images
+
+### app/proxy
+
+### app/scripts
 
 ## Detailed Explanation of the contents of the DiagnosticTestRecommender/app Folder
 ### Root level App Folder
