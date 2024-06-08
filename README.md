@@ -96,7 +96,7 @@ Then the /scripts/run.sh is executed which executes the commands to bring up our
 
 Now you are doing all of this on your machine. Which means when you run the docker-compose-deploy up on your machine, it spins up a docker image and then on that image it runs all the services you have defined and brings up your application and so when you access the localhost url you are able to access your application. But since you want your application to be used by users across the internet, instead of using your machine , you need a virtual server in the cloud where you can run the docker-compose-deploy command and all this setup is run there and you app can then be accessed by users across the internet. We use AWS EC2 for the virtual server.
 
-## AWS
+## AWS - EC2 Instcnace Creation & Set up
 1. Create an IAM user incase you do not already have one
 2. Create the public private key pair in the /Users/adarshatluri/.ssh folder. Create the .ssh folder if it doesnt exist
 3. Run the "ssh-keygen -t rsa -b 4096" to generate the private key public key pair.
@@ -108,7 +108,6 @@ Now you are doing all of this on your machine. Which means when you run the dock
 9. We then run "cat ~/.ssh/id_ed25519.pub" to display the public key.
 10. Go to your github account -> the project repo -> settings -> Add deploy keys. And add the deploy key.
 
-## Server Setup
 ### Creating an SSH Deploy Key
 To create a new SSH key which can be used as the deploy key, run the command below:
 
@@ -118,6 +117,7 @@ Note: This will create a new ed25519 key, which is the recommended key for GitHu
 To display the public key, run:
 
 cat ~/.ssh/id_ed25519.pub
+
 ### Install and Configure Depdencies
 Use the below commands to configure the EC2 virtual machine running Amazon Linux 2.
 
@@ -136,11 +136,37 @@ Install Docker Compose:
 
 sudo curl -L "https://github.com/docker/compose/releases/download/v2.27.1}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
-Running Docker Service
-Cloning Code
+
+Git - Cloning Code
 Use Git to clone your project:
 
 git clone <project ssh url>
+
+Running the Service
+docker-compose -f docker-compose-deploy.yml up -d
+
+To stop the service, run:
+
+docker-compose -f docker-compose-deploy.yml down
+
+To stop service and remove all data, run:
+
+docker-compose -f docker-compose-deploy.yml down --volumes
+
+To view container logs, run:
+
+docker-compose -f docker-compose-deploy.yml logs
+
+If you push new versions, pull new changes to the server by running the following command:
+
+git pull origin
+Then, re-build the app image so it includes the latest code by running:
+
+docker-compose -f docker-compose-deploy.yml build app
+To apply the update, run:
+
+docker-compose -f docker-compose-deploy.yml up --no-deps -d app
+The --no-deps -d ensures that the dependant services (such as proxy) do not restart.
 
 
 ## GitHub Project & Docker Hub
