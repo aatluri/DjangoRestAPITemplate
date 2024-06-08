@@ -1,3 +1,4 @@
+#  A .dockerignore is a configuration file that describes files and directories that you want to exclude when building a Docker image
 # Git
 .git
 .gitignore

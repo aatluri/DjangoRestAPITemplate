@@ -31,6 +31,29 @@ It has the following folders at the root level:
         - wsgi.py : It is mostly used during deployment. It is used as an interface between application server to connect with django or any python framework which implements wsgi
     - images : We store any images we use in the readme file here.
     - proxy : We use a proxy to direct requests that come to the application. Any request for a static file like html, css, images etc.. is routed to the web server. Any other request is routed to the wsgi server. The contents of the proxy folder are:
+        - We are going to be using an application called nginX for our web server, and in order to use nginX, we need to add some configuration files to our product that tell nginX how to run our application.
+        - default.conf.tpl : template configuration file that's going to be used by our Docker file in order to apply the custom configuration values to the application. The reason why we call it .TPL is because we're not going to be using this file directly when we run our proxy. We're going to be passing it through something in order to set some values in the file that sets the real file on the server.
+        So the main block we have here starting on line one is the configuration block for the server.
+        Listen_port is the port that the server will be listening on. Its set using an environment variable thats passed to our application
+        location blocks are ways that you can map different URL mappings for that passed into the server requests and you can map them to different places on the system.
+        So any your row that starts with /static will go to an alias called Vol/Static which has a volume containing the static and media files for our application.
+        The next location block handles all the requests that aernt met by the above location block.
+        So nginx will first check if the request matches /static. If it does then it will pass it to alias and stop executing the request. if it doesnt match then  it will pass it to the second location block.
+        In the second config block, we are configuring the server by app host and app port. this will tell the nginx server what host and port on the uwsgi server to connect to.
+        Include helps us include the uwsgi parameters which are required for the http request to be processed in wsgi
+        Next, we have client max body size. This is the maximum body size of the request that will be passed. So it basically means here that the maximum image that can be uploaded will be ten megabytes.
+        - Uwsgi_params - required for the http request to be processed in wsgi
+        - Run.sh : Shell script that starts our proxy service
+    - scripts : This consists of a run.sh file which is run once all of our application components i.e the webserver, wsgi server , database etc... are up
+    - .dockerignore :  A .dockerignore is a configuration file that describes files and directories that you want to exclude when building a Docker image
+    - .env.sample : It consists of the environment variables wihch are used in our docker-compose-deploy.yml. This file is renamed to .env when deploying.
+    - .gitognore : Files that should be ignored by git.
+    - .flake8 : We use flake8 for linting. This file tells flake8 which files to ignore.
+    - docker-compose-deploy.yml : This is the docker-compose file thate used for build and deployment in the cloud once its set up.
+    - docker-compose.yml : This is used for build and deployment on the local machine.
+    - Dockerfile : This is the docker file which is used to build the Docker Image.
+    - requirements.dev.txt : Mentions all the python dependencies in the dev environment
+    - requirements.txt : Mentions all the python dependencies in the prod environment.
 
 
    - core : This is a Django app that consists of functionality like the Djang admin page, the models that are used in this app, Django commands that we want to run before startup of the main app
@@ -52,12 +75,6 @@ Explain the general content of this code base i.e the different folders and file
 1. Why do we need an __init__.py
 2. Get some info on how models, views, serialisers , urls interact with each other. What objects are passed and how to access some of the often used data in them. For example how do we get the current user in a view , serialiser etc..
 3. What are mixins and how do they work? https://medium.com/silicon-tribe-techdev/mixins-and-viewclasses-in-django-rest-framework-5dcd3a42617d
-4. What do we do if we want to create a new API based on a new model.
-
-## Troubleshooting
-1. Sometimes when we make changes to the settings or other files and you get weird errors, try to build the project again and then run the application.
-2. Dockerfile name
-3. Versions of things like docker, docker-compose if you are using this project in the future.
 4. What do we do if we want to create a new API based on a new model.
 
 ## Troubleshooting
@@ -364,23 +381,6 @@ Router -> ViewSet-> Serializer ->Model
 4. Register the model in admin.py
 5. Then add a serialiser, view or viewset and update urls.py
 7. Nested Serializers.
-
-## Detailed Explanation of the contents of the DiagnosticTestRecommender/app Folder
-### Root level App Folder
-
-### app/app
-
-### app/core
-
-### app/user
-
-### app/diagnostictest
-
-### app/images
-
-### app/proxy
-
-### app/scripts
 
 ## Detailed Explanation of the contents of the DiagnosticTestRecommender/app Folder
 ### Root level App Folder
