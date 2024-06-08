@@ -9,6 +9,12 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+
+# The settings.py file is the central one for configuring all Django projects.
+# It is nothing else than a Python module with defined variables.
+# All variables inside are constants, and according to PEP 0008 convention,
+# they should be written with capital letters.
+
 # Adding import os so that we can use environment variables in the database configuration.
 import os
 from pathlib import Path

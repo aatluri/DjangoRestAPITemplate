@@ -13,6 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+# This is the entry point for the project. Contains the root URL configuration of the entire project
+
 # Import DRF specific Modules
 from drf_spectacular.views import (
     SpectacularAPIView,

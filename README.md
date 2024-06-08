@@ -1,7 +1,5 @@
 # DiagnosticTestRecommender API
 
-https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/
-
 ## What does this project do
 1. This is a ready to go Django REST API project template
 2. It has a complete CICD pipeline using GitHub Actions
@@ -24,8 +22,16 @@ This code base as mentioned above is a Django REST API application.
 It has the following folders at the root level:
 1. .github/workflows -  This is a yaml configuration file is used by github actions for the cicd pipeline. We define what actions we want github to run when we push code to the master branch.
 2. app folder - This contains all of the Django project files. It consists of the the multiple django apps we define for our application. It has the following contents:
+   - manage.py : It is command-line utility for Django projects. It is generated automatically. It is placed in the root directory of the current project. It sets the DJANGO_SETTINGS_MODULE environment variable to point to the project’s settings.py file.
    - app : This is the main Django app folder that consists of the main Django files like settings.py, the urls that are exposed , the swagger documentation url etc..
         - __init__.py : the __init__.py file is used to mark a directory as a Python package. it comes by default when you create a Django project
+        - asgi.py : As well as WSGI, Django also supports deploying on ASGI, the emerging Python standard for asynchronous web servers and applications. Django’s startproject management command sets up a default ASGI configuration for you, which you can tweak as needed for your project, and direct any ASGI-compliant application server to use.
+        - settings.py : The settings.py file is the central one for configuring all Django projects. It is nothing else than a Python module with defined variables. All variables inside are constants, and according to PEP 0008 convention, they should be written with capital letters.
+        - urls.py : This is the entry point for the project. Contains the root URL configuration of the entire project
+        - wsgi.py : It is mostly used during deployment. It is used as an interface between application server to connect with django or any python framework which implements wsgi
+    - images : We store any images we use in the readme file here.
+    - proxy : We use a proxy to direct requests that come to the application. Any request for a static file like html, css, images etc.. is routed to the web server. Any other request is routed to the wsgi server. The contents of the proxy folder are:
+
 
    - core : This is a Django app that consists of functionality like the Djang admin page, the models that are used in this app, Django commands that we want to run before startup of the main app
 
@@ -151,7 +157,6 @@ Now you are doing all of this on your machine. Which means when you run the dock
 4. Using the public key, import a key pair in AWS
 5. Create an EC2 instance and include this keypair you imported.
 6. Use the steps mentioned in the connect section of AWS in the EC2 instance tab to connect via ssh.
-7. Run the below command from the folder containing the keys ssh -i "id_rsa" ec2-user@ec2-34-219-62-6.us-west-2.compute.amazonaws.com
 7. Run the below command from the folder containing the keys ssh -i "id_rsa" ec2-user@ec2-34-219-62-6.us-west-2.compute.amazonaws.com
 8. Set up Githib deploy key . Run the  "ssh-keygen -t ed25519 -b 4096" in the terminal once you have ssh'd into the ec2 instance.
 9. We then run "cat ~/.ssh/id_ed25519.pub" to display the public key.

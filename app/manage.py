@@ -3,6 +3,10 @@
 import os
 import sys
 
+# manage.py is also a command-line utility for Django projects.
+# Each Django project includes a Python script called manage.py file that is generated automatically.
+# It is placed in the root directory of the current project.
+# It sets the DJANGO_SETTINGS_MODULE environment variable to point to the project’s settings.py file.
 
 def main():
     """Run administrative tasks."""
