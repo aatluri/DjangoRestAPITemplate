@@ -24,8 +24,10 @@ This code base as mentioned above is a Django REST API application.
 It has the following folders at the root level:
 1. .github/workflows -  This is a yaml configuration file is used by github actions for the cicd pipeline. We define what actions we want github to run when we push code to the master branch.
 2. app folder - This contains all of the Django project files. It consists of the the multiple django apps we define for our application. It has the following contents:
-   - app : This is the main Django app folder that consists of the main Django files like settings.py
-   - core : This is a Django app
+   - app : This is the main Django app folder that consists of the main Django files like settings.py, the urls that are exposed , the swagger documentation url etc..
+        -__init__.py : the __init__.py file is used to mark a directory as a Python package. it comes by default when you create a Django project
+     
+   - core : This is a Django app that consists of functionality like the Djang admin page, the models that are used in this app, Django commands that we want to run before startup of the main app
 
 Explain the general content of this code base i.e the different folders and files. What do the various apps do, what auth doe we use, where do we run the admin from or models or testing etc... What do we use for linting, testing, api docs etc..
 
