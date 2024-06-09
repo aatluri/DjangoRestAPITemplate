@@ -1,6 +1,11 @@
 """
 Django command to wait for the database to be available.
 """
+# In this project we have the database and application on the same docker image which we will install on a server.
+# So we want the application to come up only after the database is available so that when we run the migrations,
+# the db is available. So we created this wait for db command which we call before calling the main application.
+# If we have a remote database, then we dont need to have this command.
+
 import time
 
 from psycopg2 import OperationalError as Psycopg2OpError
