@@ -47,7 +47,7 @@ def create_diagnostictest(user, **params):
         'description': 'Sample description',
         'link': 'http://example.com/diagnostictest.pdf',
     }
-    # We create a efaults dictionary and update whatever was passed through params.
+    # We create a default dictionary and update whatever was passed through params.
     # We do this because we dont want to directly use the values of params
     defaults.update(params)
     diagnostictest = DiagnosticTest.objects.create(user=user, **defaults)

@@ -1,21 +1,41 @@
 # DiagnosticTestRecommender API
 
-## What does this project do
-1. This is a ready to go Django REST API project template
-2. It has a complete CICD pipeline using GitHub Actions
-3. The CICD Pipeline includes, linting, testing and deployment.
-4. The project can be deployed locally as well as to the cloud like AWS or any other cloud servide.
-6. It exposes REST endpoints that allow us to create/update/delete users who will be accessing this endpoint
-7. It exposes REST endoints that allow us to create/update/delete an entity.
-9. It provides the capability to assign tags to the entity being exposed and also has a search capability that allows us to filter the entity based on these tags.
-10. It also has API documentation implemented.
-
 ## Motivation behind this project
-1. While working on real world projects or ideas, we spend more time on tasks like project setup, cicd pipeline set up, deployment, documentation than on the actual implementation of our idea.
+1. While working on real world projects or ideas, we spend a lot of time on tasks like project setup, cicd pipeline set up, deployment, documentation than on the actual implementation of our idea.
 2. This project provides you a boiler plate project template with all the necessary things built in.
 3. All you need to do is download this code base and follow a few simple steps to get it running on your machine or on AWS.
 4. Then you can extend the logic inside this already deployed project to suit your needs.
 
+## What does this project do
+1. This is a ready to go Django REST API project template.
+2. It has a complete CICD pipeline using GitHub Actions
+3. The CICD Pipeline includes, linting, testing and deployment.
+4. The project can be deployed locally as well as to the cloud like AWS or any other cloud servide.
+6. It exposes REST endpoints that allow us to get/put/post/delete users who will be accessing this endpoint
+7. It exposes REST endoints that allow us to get/put/post/delete an entity. In this case its a diagnostictest. What i mean here by a diagnostictest is tests like cbc, urine analysis etc...
+9. It provides the capability to assign tags to the diagnostictests being exposed and also has a search capability that allows us to search for diagnostictests based on these tags.
+10. It also has API documentation implemented.
+
+## Real World Application of this project
+I build this api to be able to filter diagnostic tests based on tags assigned to them. The tags would be patient symptoms and/or their family health history details. The purpose was to use this in hospitals or labs so that based on the patients health history & symptoms, we can return the respective diagnostictests that are recommended.  But you can update the diagnostictest entity to be whatever you need. For example it could be a recipe with tags. You can always duplicate the tags and also have ingredients. Then you would be able to filter a recipe based on tags and ingredients.
+
+## Technologies used in this project
+1. Python :  The programming language we will be using.
+2. Django : We will be using Django on top of the Python framework. It's basically a Python framework for building websites.
+3. Django Rest Framework : It adds features for building rest APIs. We will install this into Django.
+4. PostGres : PostGres will be the database we will be using to store data.
+5. Docker:  Docker is a software platform that allows you to build, test, and deploy applications quickly. Docker packages software into standardized units called containers that have everything the software needs to run including libraries, system tools, code, and runtime. We will be running a dockerized service of our API as well as a dockerized service of our database. This allows us to create a development environment that we can use to build our application. And also it allows us to easily deploy our application to a server.
+6. Swagger UI : This will serve as documentation for our API and also give us a browser API that we can use to test
+7. We will be using the Djanto Test Framework for the Unit Tests
+8. We will be using Flake8 for Code Linting.
+9. GitHub Actions : So GitHub actions is going to handle the CICD part. So it'll be used to run things like testing and linting every time we make changes to our code and push the code up to GitHub.
+
+
+## Django Project Structure
+1. app/ : This is the main Django app which is called app
+2. app/core/ : This Django app contains code that is shared by multiple apps like the database definition using Django Models.
+3. app/user/ : This Django app has everything that is needed for our User APIs. This will be called user and it will handle things such as the user registration and creating authentication tokens.
+4. app/diagnostictest/ : This Django app will have everything to do with our diagnostictest api
 
 ## Contents of this code base
 This code base as mentioned above is a Django REST API application.
@@ -79,11 +99,26 @@ It has the following folders at the root level :
 
 
 
+## Setup
+This section will do the following:
+1. Set up your system with the necessary software needed
+2. Set up the project
+3. Set up the CICD pipeline
+Once the above is done, you will be able to build & deploy your project.
 
+### System Setup
+1. Install a code editor. I used VSCode
+2. Install Docker Desktop for Windows or Mac
+    - Once you are done installing, run the below commands to verify the install.
+    - Run docker --version
+    - Run docker-compose --version
+3. Install Git
+    - Most machines already come with git installed but since we are using Github actions for the CICD pipeline, you will need to ensure that git is installed.
 
-Explain the general content of this code base i.e the different folders and files. What do the various apps do, what auth do we use, where do we run the admin from or models or testing etc... What do we use for linting, testing, api docs etc..
-
-## Build & Deploy this project locally
+### Project Setup
+1. Go to your github account and create a repository. Copy the https or ssh url for your project.
+2. Then on your local machine, go to the location where you want to clone the repository
+3. Run git clone "url for the project"
 
 ## Documentation & Usage post local deployment
 
