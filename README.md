@@ -73,7 +73,7 @@ It has the following folders at the root level :
         - views.py : We create the views for the diagnostictest and tags which are used in the serializer.
 
     - images : We store any images we use in the readme file here.
-    - proxy : This is mainly related to when we need to deploy the project to a cloud serivice. See #cloud-deployment-process-summary . In order to use nginX, we need to add some configuration files to our product that tell nginX how to run our application. The contents of the proxy folder are:
+    - proxy : This is mainly related to when we need to deploy the project to a cloud serivice. See (#cloud-deployment-process-summary) . In order to use nginX, we need to add some configuration files to our product that tell nginX how to run our application. The contents of the proxy folder are:
         - default.conf.tpl : template configuration file that's going to be used by our Docker file in order to apply the custom configuration values to the application. The reason why we call it .TPL is because we're not going to be using this file directly when we run our proxy. We're going to be passing it through something in order to set some values in the file that sets the real file on the server.
         So the main block we have here starting on line one is the configuration block for the server.
         Listen_port is the port that the server will be listening on. Its set using an environment variable thats passed to our application
