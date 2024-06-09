@@ -1,5 +1,5 @@
 # DiagnosticTestRecommender API
-(#setup)
+
 ## Motivation behind this project
 1. While working on real world projects or ideas, we spend a lot of time on tasks like project setup, cicd pipeline set up, deployment, documentation than on the actual implementation of our idea.
 2. This project provides you a boiler plate project template with all the necessary things built in.
