@@ -1,4 +1,9 @@
 # Create your views here.
+# We first create a serializer that uses our model. We then create a view that uses our serializer.
+# We then create a url pattern which when accessed will use the View. So when a http call is made to
+# the url pattern defined, it calls the view thats is defined which inturn calls the serialiser
+# which in turn uses the model.
+# URL -> View-> Serializer -> Model
 
 """
 Views for the user API.
