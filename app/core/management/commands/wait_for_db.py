@@ -2,9 +2,12 @@
 Django command to wait for the database to be available.
 """
 # In this project we have the database and application on the same docker image which we will install on a server.
-# So we want the application to come up only after the database is available so that when we run the migrations,
-# the db is available. So we created this wait for db command which we call before calling the main application.
-# If we have a remote database, then we dont need to have this command.
+# Although we added a depends on condition in our docker compose file which ensures that the app service only starts
+# after the db service, this can still lead to issues.
+# This is because starting the db service doesnt necessarily mean that the postgresql database is up and running.
+# And if the app services to start and connect to the db and if postgresql is not yet ready, the app will crash.
+# To fix this race condition, we create another django app called Core and added a custom wait for db command which
+# checks for the availability of the database before proceeding.
 
 import time
 

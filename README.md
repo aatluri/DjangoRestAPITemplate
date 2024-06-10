@@ -23,7 +23,7 @@ I build this api to be able to filter diagnostic tests based on tags assigned to
 1. Python :  The programming language we will be using.
 2. Django : We will be using Django on top of the Python framework. It's basically a Python framework for building websites.
 3. Django Rest Framework : It adds features for building rest APIs. We will install this into Django.
-4. PostGres : PostGres will be the database we will be using to store data.
+4. PostGres : PostGres will be the database we will be using to store data. We will be defining the database configuration inside our actual project source code, which means it's reusable for other developers who might be working on the project. Or if we want to shift from one machine to another and it's also reusable for our deployment environment. So we have the database and application on the same docker image which we will install on a server.
 5. Docker:  Docker is a software platform that allows you to build, test, and deploy applications quickly. Docker packages software into standardized units called containers that have everything the software needs to run including libraries, system tools, code, and runtime. We will be running a dockerized service of our API as well as a dockerized service of our database. This allows us to create a development environment that we can use to build our application. And also it allows us to easily deploy our application to a server.
 6. Swagger UI : This will serve as documentation for our API and also give us a browser API that we can use to test
 7. We will be using the Djanto Test Framework for the Unit Tests
@@ -282,31 +282,6 @@ All our python code is executed by the uWSGI server.The database is the PostGres
 Now you are doing all of this on your machine. Which means when you run the docker-compose-deploy up on your machine, it spins up a docker image and then on that image it runs all the services you have defined and brings up your application and so when you access the localhost url you are able to access your application. But since you want your application to be used by users across the internet, instead of using your machine , you need a virtual server in the cloud where you can run the docker-compose-deploy command and all this setup is run there and you app can then be accessed by users across the internet. We use AWS EC2 for the virtual server.
 
 
-## Documentation & Usage post cloud deployment
-
-
-## Commonly used Commands
-
-## Quick summary of some Django Concepts
-1. Why do we need an __init__.py
-2. Get some info on how models, views, serialisers , urls interact with each other. What objects are passed and how to access some of the often used data in them. For example how do we get the current user in a view , serialiser etc..
-3. What are mixins and how do they work? https://medium.com/silicon-tribe-techdev/mixins-and-viewclasses-in-django-rest-framework-5dcd3a42617d
-4. What do we do if we want to create a new API based on a new model.
-
-## Troubleshooting
-1. Sometimes when we make changes to the settings or other files and you get weird errors, try to build the project again and then run the application.
-2. Dockerfile name
-3. Versions of things like docker, docker-compose if you are using this project in the future.
-4. Sometimes when we make changes to the settings or other files and you get weird errors, try to build the project again and then run the application.
-
-
-
-
-
-
-
-
-
 
 ### AWS Setup
 1. Create an IAM user incase you do not already have one
@@ -388,23 +363,18 @@ To apply the update, run:
 The --no-deps -d ensures that the dependant services (such as proxy) do not restart.
 
 
+**Accessing the API Post Deployment to AWS**
+1. Go to AWS->EC2
+2. Find the Public IPV4 DNS for your EC2 instance
+3. Go to the Public IPV4 DNS\api\docs. For example:
+
+ ```http://ec2-34-219-62-6.us-west-2.compute.amazonaws.com/api/docs```
+4. You can also access the admin module at Public IPV4 DNS\admin.
+5. You can follow the same steps ad on your local machine to create a superuser i.e by running the docker command.
+6. But in this case, you will need to run this after you ssh into your EC2 instance.
 
 
 
-
-
-
-##  Database
-1. We're going to be using Docker Compose to configure our database for our project.
-2. So this will allow us to define the database configuration inside our actual project source code, which means it's reusable for other developers who might be working on the project. Or if we want to shift from one machine to another and it's also reusable for our deployment environment. The way we are going to do this is we are going to have two services in Docker Compose. One is the App and the other is the Database service.
-3. We will be using the Postgresql database.
-
-
-
-## Fixing Race Condition
-1. Although we added a depends on condition in our docker compose file which ensures that the app service only starts after the db service, this can still lead to issues.
-2. This is because starting the db service doesnt necessarily mean that the postgresql database is up and running. And if the app services to start and connect to the db and if postgresql is not yet ready, the app will crash.
-3. To fix this race condition, we create another django app called Core and added a custom wait for db command which checks for the availability of the database before proceeding.
 
 
 ## Database Migrations
@@ -437,46 +407,19 @@ The --no-deps -d ensures that the dependant services (such as proxy) do not rest
 4. Finaly you can create and run the migrations using the new custom user model.
 
 
-## Creating the User API
-1. Delete some of the unncessary files like admin, model, migrations etc..
-2. We first create a serialiser for creating our user object and serializing our user object.
-3. Serializers are used to convert complex data types, such as Django model instances, into Python data types that can be easily rendered into JSON, XML, or other content types. Serializers also provide deserialization, allowing parsed data to be converted back into complex types after first validating the incoming data. Serializers in Django are a part of the Django REST framework, a powerful and flexible toolkit for building Web APIs.
-4. We create a serializer and create a view that uses this serializer.
-5. So when you make the http type request, it goes through to the URL and then it gets passed into this create user view clause, which will then call the sterilizer and create the object and then return the appropriate response.
-6. URL -> View-> Serializer -> Model
-7. We first create a serializer that uses our model. We then create a view that uses our serializer. We then create a url pattern which when accessed will use the View. So when a http call is made to the url pattern defined, it calls the view thats is defined which inturn calls the serialiser which in turn uses the model.
-
-### Authentication
-1. We are using Token Authentication.
-2. Well, basically you start by creating a token.
-3. So we need to provide an endpoint that accepts the user's username and password or the email address and password. And that is then going to create a new token in our database and return that token to the client.
-4. So then the client can store that token somewhere So that could be in session stores.
-5. If you're using a web browser, it could be in the local storage, it could be in a cookie or it could be on an actual database on the local client.
-6. every request that the client makes to the APIs that have to be authenticated is simply includes this token in the http headers of the request, and this means that the request can be authenticated in our backend.
-7.  pros of using token authentication are that it is supported out of the box by Django rest framework.
-8. Cons of token auth is that the token needs to be stored on the client side so if someone gets hold of it, they can impersonate the user.
-9. Logging out happens on the client side and it works by deleting the token.
-10. Talk about how authentication works, see views file.
-
-## APIView vs ViewSets
-URL -> View-> Serializer -> Model
-Router -> ViewSet-> Serializer ->Model
-
-## Creating the DiagnosticTest API
-1. Create an app
+## Creating a New API based on a new Model
+1. Create a new Django App
 2. Delete some of the unncessary files like admin, model, migrations etc..
-3. Create the model, enalble it in Django Admin, create the migrations
-4. Create a serializer
-5. Create a APIView or ViewSet
-6. Create a urls.py to route the urls
-7. Update the main app urls.py to access the urls you set up for the diagnostic api.
+3. Update the models.py in the core app to add the new Model.
+4. We first create a serialiser for creating our object
+5. Serializers are used to convert complex data types, such as Django model instances, into Python data types that can be easily rendered into JSON, XML, or other content types. Serializers also provide deserialization, allowing parsed data to be converted back into complex types after first validating the incoming data. Serializers in Django are a part of the Django REST framework, a powerful and flexible toolkit for building Web APIs.
+6. We create a view that uses this serializer.
+7. So when you make the http type request, it goes through to the URL and then it gets passed into this create oject view clause, which will then call the sterilizer and create the object and then return the appropriate response.
+8. We then create a url pattern which when accessed will use the View
+9. URL -> View-> Serializer -> Model
+10. So when a http call is made to the url pattern defined, it calls the view thats is defined which inturn calls the serialiser which in turn uses the model.
 
 
-## Steps when creating a new Model
-1. Add the model to the models.py
-2. Enable this in the Django Admin.
-3. Then we run the migrations will create the migrations script to run on the database.
-4. Register the model in admin.py
-5. Then add a serialiser, view or viewset and update urls.py
-7. Nested Serializers.
+
+
 
