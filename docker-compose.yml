@@ -6,6 +6,13 @@
 # The docker compose v2 (=the cli plugin) will always use the latest version of the compose file schema.
 # version: "3.9"
 
+# Dockercompose defines how Docker images should be used to run out development server.
+# We define the images as different services.
+# Each service has the following:
+# name : the name of the service
+# port mappings: You can define various port mappings which make ports accessible on your local machine, and this is how we're going to actually connect to the containers that are running our application
+# volume mappings: Volume mappings is important because it's how the code in our project gets into the Docker container.
+
 # This is the main block inside the Docker compose file. It consists of one more services needed by our application
 
 

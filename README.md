@@ -88,9 +88,9 @@ It has the following folders at the root level :
     - .env.sample : It consists of the environment variables wihch are used in our docker-compose-deploy.yml. This file is renamed to .env when deploying.
     - .gitognore : Files that should be ignored by git.
     - .flake8 : We use flake8 for linting. This file tells flake8 which files to ignore.
-    - docker-compose-deploy.yml : This is the docker-compose file thate used for build and deployment in the cloud once its set up.
-    - docker-compose.yml : This is used for build and deployment on the local machine.
-    - Dockerfile : This is the docker file which is used to build the Docker Image.
+    - docker-compose-deploy.yml : Dockercompose defines how Docker images should be used to run out development server. This is the docker-compose file that is used for build and deployment in the cloud once its set up.
+    - docker-compose.yml : Dockercompose defines how Docker images should be used to run out development server. This is used for build and deployment on the local machine.
+    - Dockerfile : The Docker File is just a list of steps that docker uses to build our image.
     - requirements.dev.txt : Mentions all the python dependencies in the dev environment
     - requirements.txt : Mentions all the python dependencies in the prod environment.
 
@@ -113,11 +113,52 @@ Once the above is done, you will be able to build & deploy your project.
     - Most machines already come with git installed but since we are using Github actions for the CICD pipeline, you will need to ensure that git is installed.
 
 ### Project Setup
+### Git
 1. Go to your github account and create a repository. Copy the https or ssh url for your project.
 2. Then on your local machine, go to the location where you want to clone the repository
-3. Run git clone "url for the project"
+3. Run git clone "url for the project".
+### GitHub & DockerHub
+1. Go to hub.docker.com and sign in to your account
+2. Go to your profile/Account Settings/ Security
+3. Create an Access Token. You can choose any name for your token but its good practice to use the name of your github repo.
+4. Copy the access token. Once you close the access token, you wont be able to see it again but you can always delete and recerate it.
+5. Go to Settings -> Secrets on your GitHub repository.
+6. Create a new repository secret. Name should be DOCKERHUB_USER and in the value, put the name of your docker hub access token.
+7. Create a new repository secret. Name should be DOCKERHUB_TOKEN and in the value, copy the value of dockerhub access token.
+
+### Python Requirements
+1. All the python requirements are listed in the requirements.txt.
+2. We also have a requirements.dev.txt in which we list the dependencies that are needed only during development.
+3. Later you will see that in the Dockerfile, when we are running the project for the dev environment, we also install the dependencies mentioned in the requirements.dev.txt.
+4. Since we already cloned the code base, we already have the requirements.txt and requirements.dev.txt file.
+5. **_Depending on when you are using this, the versions for some of these dependencies might need to be updated to the latest versions._**
+
+### Docker Configuration
+1. The Dockerfile needed for Docker configuration is already present in the code base.
+2. The Docker File is just a list of steps that docker uses to build our image. The Docker File has all of the operating system level dependencies required for our project. We first choose the base image, install all the dependencies on that image and set up users.
+3. The file has detailed comments, so you can go through it and understand what we are doing in the file.
+4. Lets test that we can build our image successfully
+5. Go to the Termimal and navigate to the diagnostictest folder which contains the Dockerfile and run the below command:
+```
+docker build .
+```
+6. If it ran successfully you should see that our image is created successfully.
+
+### Docker Compose Configuration
+
+docker-compose run --rm app sh -c "python manage.py test"
+docker-compose: runs a docker compose command
+run : will start a specific container using the specified config
+-rm : tells docker to remove the container once its finished running
+app : the name of the app defined in the docker compose configuration
+sh -c : Says we want to run a single shell command on our container
+"python manage.py test" : Then finally you pass in the Django command you want to run in our container.
+"docker-compose run --rm app" : This is the docker compose syntax. Everything after that is run on the container.
 
 ## Documentation & Usage post local deployment
+
+
+
 
 ## Build & Deploy this project to the AWS Cloud
 

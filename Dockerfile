@@ -8,11 +8,13 @@
 # 1. Visual Studio code is unable to access the interpreterof your Python project.
 # 2. It's difficult to configure your editor to use the integrated features that work with Python and other things such as the interactive debugger and also the learning tools that come with Visual Studio code.
 
+# The Docker File is just a list of steps that docker uses to build our image.
 # The Docker File has all of the operating system level dependencies required for our project
-# We first choose the base image and then install all the dependencies on that image.
+# We first choose the base image, install all the dependencies on that image and set up users.
 
 
-# Using python on the alpine linux image. It is is  light weight image We can find all the python images available at https://hub.docker.com/_/python
+# Since ours is a python project, we will use a python base image.
+# Using python on the alpine linux image. It is is light weight image We can find all the python images available at https://hub.docker.com/_/python
 FROM python:3.9-alpine3.13
 
 # This lets other developers know who maintains this app
@@ -60,7 +62,8 @@ RUN python -m venv /py && \
         build-base postgresql-dev musl-dev zlib zlib-dev linux-headers && \
 # Install all the requirements inside the virtual environment.
     /py/bin/pip install -r /tmp/requirements.txt && \
-# If dev equals to true then it installs the dev dependencies. the fi is how you end an if statement in shell script.
+# If dev equals to true then it also installs the contents of the requirements.dev.txt i.e the dev dependencies which is things like flake8.
+# The fi is how you end an if statement in shell script.
     if [ $DEV = "true" ]; \
         then /py/bin/pip install -r /tmp/requirements.dev.txt ; \
     fi && \
