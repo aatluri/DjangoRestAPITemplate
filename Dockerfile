@@ -53,7 +53,14 @@ ARG DEV=false
 RUN python -m venv /py && \
 # Upgrade pip for the virtual environment we just created
     /py/bin/pip install --upgrade pip && \
-# Installing the postgresql-client package inside our alpine image in order for the psycopg2 package to be able to connect to Postgre
+# Installing the PostgreSql Database Adapter
+# Psycopg2 is the package needed for Django to connect to our PostGreSql database.
+# So to install Psycopg2, they have a list of the package dependencies in the official documentation and this list includes the
+# C compiler, Python3-dev, libpq-dev
+# For our alpine image , the equivalent packages are:
+# postgresql-client, build-base, postgresql-dev, musl-dev
+# build-base, postgresqldev and musl-dev are only needed to install the psycop2 package. So these can be deleted after we build our project.
+# we cannot delete the postgresql-client package inside our alpine image as it is used by the psycopg2 package to be able to connect to Postgre
     apk add --update --no-cache postgresql-client jpeg-dev && \
 # Sets a virtual dependency package. It groups all the packages we install under this name so that they can be deleted later.
 # We then add the musl-dev packages we need to be able to install the psycop2 package.
