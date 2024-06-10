@@ -162,13 +162,6 @@ docker-compose -f docker-compose-deploy.yml build
 ```
 9. If this command runs successfully you should see that our image is created successfully.
 
-**docker-compose.yml vs docker-compose-deploy.yml**
-1. Both these files are docker compose configuration files. The key difference between them is that docker-compose.yml is set up for being run during development whereas docker-compose-deploy.yml is set up to be run during deployment.
-2. The docker-compose.yml file has the ARGS DEV=TRUE. This overwrites the ARGS DEV=FALSE in the Dockerfile and tells docker that we are now building running in a development environment. So the Dockerfile also includes the dependencies from the requirements.dev.txt i.e flake8. So when we want runflake8 on our code or we want to execute the unit tests in our code, we will use docker-compose.yml
-3. The docker-compose-deploy.yml does not set ARGS DEV=TRUE. So the ARGS DEV=FALSE in Dockerfile is not overwritten. So the dependencies from requirements.dev.txt are not installed. Also the docker-compose-deploy.yml sets up the proxy service as per our cloud deployment process summary . Please see the Cloud Deployment Process Summary section.
-_When running the docker-compose-deploy.yml file, ensure that that you create a copy of the .env.sample file and name it to .env as this is required._
-
-
 **Linting & Tests**
 1. As you might have seen , we use flake8 for linting and this has already been included in the requirements.dev.txt
 2. For testing we use the Django test framework that comes with Django.
@@ -180,45 +173,88 @@ _When running the docker-compose-deploy.yml file, ensure that that you create a 
 4. While its not necessary to set up DockerHub authentication, it gives us the advantage of getting around the rate limits set by docker to pull the base images each time we build our image.
 2. The file has detailed comments for each step which you can go through tio get a better understanding of what happens in the file.
 
-## Build & Run the project Locally
+## docker-compose.yml vs docker-compose-deploy.yml
+1. Both these files are docker compose configuration files. The key difference between them is that docker-compose.yml is set up for being run during development whereas docker-compose-deploy.yml is set up to be run during deployment.
+2. The docker-compose.yml file has the ARGS DEV=TRUE. This overwrites the ARGS DEV=FALSE in the Dockerfile and tells docker that we are now building running in a development environment. So the Dockerfile also includes the dependencies from the requirements.dev.txt i.e flake8. So when we want runflake8 on our code or we want to execute the unit tests in our code, we will use docker-compose.yml
+3. The docker-compose-deploy.yml does not set ARGS DEV=TRUE. So the ARGS DEV=FALSE in Dockerfile is not overwritten. So the dependencies from requirements.dev.txt are not installed. Also the docker-compose-deploy.yml sets up the proxy service as per our cloud deployment process summary . Please see the Cloud Deployment Process Summary section._When running the docker-compose-deploy.yml file, ensure that that you create a copy of the .env.sample file and name it .env as this is required._
+4. **When running on the local machine, we can use either docker-compose.yml or docker-compose-deploy.xml. However using docker-compose-deploy.xml will be more useful as thats what we will run on the clour server as well and so if there are any issues we can catch them earlier.**
+5. The ```-f docker-compose-deploy.yml``` tells docker-compose to use the docker-compose-deploy.yml. When not specified it uses the docker-compose.yml by default.
+6. _All of the docker-compose commands will also work with docker-compose-deploy.xml except for the flake8 command. This is because flake8 is installed only when the project is built using docker-compose since the ARGS DEV is set to TRUE and the dependency mentioned in requirements.dev.txt i.e flake8 is also installed._
+
+
+
+## Build & Run the project on your local machine
 1. Open up terminal and navigate to the diagnostictest folder
 2. To build the project, run the below command
 ```
-docker-compose build
+docker-compose -f docker-compose-deploy.yml build
 ```
 2. To run the project, run the below command
 ```
-docker-compose up
+docker-compose -f docker-compose-deploy.yml up
 ```
-You can hit Ctrl C to kill the run.
+3. You can hit Ctrl C to kill the run.
 
-2. To cleanup the containers that might have been created , run the below command
+4. To cleanup the containers that might have been created , run the below command
 ```
+docker-compose -f docker-compose-deploy.yml down
+```
+5. Its recommended to run the down command before we run the application so that any existing containers are cleaned up.
+
+6. You can also do the same by using docker-compose.xml
+```
+docker compose build
+docker-compose up
 docker-compose down
 ```
-Its recommended to run the down command before we run the application so that any existing containers are cleaned up.
 
-**Other Docker Compose Commands**
+## Django Admin
+1. Once you run the project, you will need to create a superuser to login to the Django Admin Module.
+2. Run ```docker-compose -f docker-compose-deploy.yml run --rm app sh -c "python manage.py createsuperuser"``` to create a superuser.
+3. Navigate to ```http://127.0.0.1:8000/admin/login/?next=/admin/``` to access the admin page.
+4. Login with the superuser login and password.
+5. The Django Admin Module will load. You will be able to manage users, authentication & the entities you created in the project i.e diagnostictests & tags in this case.
+
+## Interacting with REST APIs
+1. Navigate to ```http://127.0.0.1:80/api/docs``` and you will see the API documentation. The port will depend on which port you used in the docker-compose-deploy.xml.
+2. Since we enabled authentication for all of our APIs, we will first need to create an authentication token using the superuser login credentials we created above.
+3. Click on the POST /api/user/token & Click on Try it Out.
+4. Enter the superuser email and password and click on Execute.
+5. You will see a alphanumeric Token value.
+6. Now click on Authorize at the top right. Scroll to tokenAuth and in the value enter ```Token value``` . Replace value with the token value you copied.
+7. Click on Authorize.
+8. Once you are authorized, you can now use any of the other apis.
+9. When you try out these apis, you will also see the curl command to call these apis can be used in any other applications looking to call these APIs.
+
+## Other Docker Commands
+**Docker Compose Commands**
 1. Run ```docker-compose run --rm app sh -c "python manage.py test"``` to run tests
-2. Run docker-compose run --rm app sh -c "python manage.py wait_for_db" to run a command directly
-3. Run docker-compose run --rm app sh -c "python manage.py makemigrations" to create the autogenerated migrations file
-4. Run docker-compose run --rm app sh -c "python manage.py wait_for_db && python manage.py migrate" to migrate the models to the database.
-5. Run docker volume ls to list any volumes
-6. Run docker volume rm "name of volume" to remove the volume
-7. Run docker-compose run --rm app sh -c "flake8 --max-line-length 120" to run linting.
-8. Run docker-compose run --rm app sh -c "python manage.py startapp user" to create a Django app within our project
+2. Run ```docker-compose run --rm app sh -c "python manage.py wait_for_db"``` to run a command directly
+3. Run ```docker-compose run --rm app sh -c "python manage.py makemigrations"``` to create the autogenerated migrations file
+4. Run ```docker-compose run --rm app sh -c "python manage.py wait_for_db && python manage.py migrate"``` to migrate the models to the database.
+5. Run ```docker volume ls``` to list any volumes
+6. Run ```docker volume rm "name of volume"``` to remove the volume
+7. Run ```docker-compose run --rm app sh -c "flake8 --max-line-length 120"``` to run linting.
+8. Run ```docker-compose run --rm app sh -c "python manage.py startapp user"``` to create a Django app within our project
 
-docker-compose run --rm app sh -c "python manage.py test"
-docker-compose: runs a docker compose command
-run : will start a specific container using the specified config
--rm : tells docker to remove the container once its finished running
-app : the name of the app defined in the docker compose configuration
-sh -c : Says we want to run a single shell command on our container
-"python manage.py test" : Then finally you pass in the Django command you want to run in our container.
-"docker-compose run --rm app" : This is the docker compose syntax. Everything after that is run on the container.
+**Docker Compose Deploy Commands**
+1. Run ```docker-compose -f docker-compose-deploy.yml run --rm app sh -c "python manage.py test"``` to run tests
+2. Run ```docker-compose -f docker-compose-deploy.yml run --rm app sh -c "python manage.py wait_for_db"``` to run a command directly
+3. Run ```docker-compose -f docker-compose-deploy.yml run --rm app sh -c "python manage.py makemigrations"``` to create the autogenerated migrations file
+4. Run ```docker-compose -f docker-compose-deploy.yml run --rm app sh -c "python manage.py wait_for_db && python manage.py migrate"``` to migrate the models to the database.
+5. Run ```docker volume -f docker-compose-deploy.yml ls``` to list any volumes
+6. Run ```docker volume -f docker-compose-deploy.yml rm "name of volume"``` to remove the volume
+7. Run ```docker-compose run -f docker-compose-deploy.yml --rm app sh -c "python manage.py startapp user"``` to create a Django app within our project
 
-## Documentation & Usage post local deployment
-
+**Explanation of a docker-compose command**
+Consider ```docker-compose run --rm app sh -c "python manage.py test"``` as an example
+1. docker-compose: runs a docker compose command
+2. run : will start a specific container using the specified config
+3. -rm : tells docker to remove the container once its finished running
+4. app : the name of the app defined in the docker compose configuration
+5. sh -c : Says we want to run a single shell command on our container
+6. "python manage.py test" : Then finally you pass in the Django command you want to run in our container.
+7. "docker-compose run --rm app" : This is the docker compose syntax. Everything after that is run on the container.
 
 
 
