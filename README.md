@@ -88,8 +88,8 @@ It has the following folders at the root level :
     - .env.sample : It consists of the environment variables wihch are used in our docker-compose-deploy.yml. This file is renamed to .env when deploying.
     - .gitognore : Files that should be ignored by git.
     - .flake8 : We use flake8 for linting. This file tells flake8 which files to ignore.
-    - docker-compose-deploy.yml : Dockercompose defines how Docker images should be used to run out development server. This is the docker-compose file that is used for build and deployment in the cloud once its set up.
-    - docker-compose.yml : Dockercompose defines how Docker images should be used to run out development server. This is used for build and deployment on the local machine.
+    - docker-compose-deploy.yml : Dockercompose defines how Docker images should be used to run on our production server. This is the docker-compose file that is used for build and deployment in the cloud once its set up.
+    - docker-compose.yml : Dockercompose defines how Docker images should be used to run on our development server. This is used for build and deployment on the local machine.
     - Dockerfile : The Docker File is just a list of steps that docker uses to build our image.
     - requirements.dev.txt : Mentions all the python dependencies in the dev environment
     - requirements.txt : Mentions all the python dependencies in the prod environment.
@@ -146,6 +146,33 @@ docker build .
 6. If it ran successfully you should see that our image is created successfully.
 
 **Docker Compose Configuration**
+1. The docker-compose.yml file needed for Docker Compose configuration is already present in the code base.
+2. Dockercompose defines how Docker images should be used to run on our development server.
+3. The file has detailed comments, so you can go through it and understand what we are doing in the file.
+4. Lets test that we can build our image successfully using docker-compose
+5. Go to the Termimal and navigate to the diagnostictest folder which contains the Dockerfile and run the below command:
+```
+docker-compose build
+```
+6. This effectively does the same thing as docker build but it does it via the Dockerfile. It builds and tags the images appropriately for running the application.
+7. If this command runs successfully you should see that our image is created successfully.
+8. Then run the below command
+```
+docker-compose -f docker-compose-deploy.yml build
+```
+9. If this command runs successfully you should see that our image is created successfully.
+
+**docker-compose.yml vs docker-compose-deploy.yml**
+Both these files are docker compose configuration files. The key difference between them is that docker-compose.yml is set up for being run during development whereas docker-compose-deploy.yml is set up to be run during deployment.
+1. The docker-compose.yml file has the ARGS DEV=TRUE. This overwrites the ARGS DEV=FALSE in the Dockerfile and tells docker that we are now building running in a development environment. So the Dockerfile also includes the dependencies from the requirements.dev.txt i.e flake8. So when we want runflake8 on our code or we want to execute the unit tests in our code, we will use docker-compose.yml
+2. The docker-compose-deploy.yml does not set ARGS DEV=TRUE. So the ARGS DEV=FALSE in Dockerfile is not overwritten. So the dependencies from requirements.dev.txt are not installed. Also the docker-compose-deploy.yml sets up the proxy service as per our cloud deployment process summary . Please see the Cloud Deployment Process Summary section.
+_When running the docker-compose-deploy.yml file, ensure that that you create a copy of the .env.sample file and name it to .env as this is required._
+
+
+**Linting & Tests**
+1. As you might have seen the linting
+
+
 
 docker-compose run --rm app sh -c "python manage.py test"
 docker-compose: runs a docker compose command

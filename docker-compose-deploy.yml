@@ -5,7 +5,7 @@
 #volumes - the volumes that we will store our static data in
 # We define the environment variables. So these are all configuration values
 # that we're going to set when we run our application on our server
-# that we have depends on which just sets up the dependency to make sure the database starts first and
+# depends on : which just sets up the dependency to make sure the database starts first and
 # also is accessible through the network.
 services:
   app:
