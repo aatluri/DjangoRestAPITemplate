@@ -346,35 +346,45 @@ Use the below commands to configure the EC2 virtual machine running Amazon Linux
 1. Use Git to clone your project: git clone <project ssh url>
 
 **Running Service**
-1. Ensure you create an .env file before starting the service.
-2. To start the service, run:
+
+Ensure you create an .env file before starting the service.
+
+To start the service, run:
 
 ```docker-compose -f docker-compose-deploy.yml up -d```
 
 **Stopping Service**
+
 To stop the service, run:
 
 ```docker-compose -f docker-compose-deploy.yml down```
+
 To stop service and remove all data, run:
 
 ```docker-compose -f docker-compose-deploy.yml down --volumes```
 
 **Viewing Logs**
+
 To view container logs, run:
 
 ```docker-compose -f docker-compose-deploy.yml logs```
+
 Add the -f to the end of the command to follow the log output as they come in.
 
 **Updating App**
+
 If you push new versions, pull new changes to the server by running the following command:
 
 ```git pull origin```
+
 Then, re-build the app image so it includes the latest code by running:
 
 ```docker-compose -f docker-compose-deploy.yml build app```
+
 To apply the update, run:
 
 ```docker-compose -f docker-compose-deploy.yml up --no-deps -d app```
+
 The --no-deps -d ensures that the dependant services (such as proxy) do not restart.
 
 
