@@ -24,7 +24,7 @@ jobs:
       - name: Login to Docker Hub
 # So uses allows you to use another pre-made action that's provided in the GitHub actions repository. This action is used to log in to Docker
         uses: docker/login-action@v1
-# Then you pass the parameters for the action.
+# Then you pass the parameters for the action. These are the secrets we already set up in the settings of the github repository
         with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
