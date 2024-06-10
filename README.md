@@ -327,12 +327,14 @@ Use the below commands to configure the EC2 virtual machine running Amazon Linux
 
 **Install Git**
 1. sudo yum install git -y
+
 **Install Docker**
 1. sudo yum install docker -y
 2. make it auto start and give ec2-user permissions to use it
 3. sudo systemctl enable docker.service
 4. sudo systemctl start docker.service
 5. sudo usermod -aG docker ec2-user
+
 **_Note: After running the above, you need to logout by typing exit and re-connect to the server in order for the permissions to come into effect._**
 
 **Install Docker Compose**
