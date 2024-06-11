@@ -363,7 +363,7 @@ To apply the update, run:
 The --no-deps -d ensures that the dependant services (such as proxy) do not restart.
 
 
-**Accessing the API Post Deployment to AWS**
+### Accessing the API Post Deployment to AWS
 1. Go to AWS->EC2
 2. Find the Public IPV4 DNS for your EC2 instance
 3. Go to the Public IPV4 DNS\api\docs. For example:
@@ -376,8 +376,10 @@ The --no-deps -d ensures that the dependant services (such as proxy) do not rest
 
 
 
+## Misc Topics
 
-## Database Migrations
+### Models & Migrations
+
 1. Django comes witn an ORM (Object Relational Mapper)
 2. The ORM serves as an abstraction layer between your data and your actual database.
 3. All the manual work of setting up tables, adding columns, sql statements to add data, change data etc.. are handledn by Django using the ORM.
@@ -390,34 +392,32 @@ The --no-deps -d ensures that the dependant services (such as proxy) do not rest
 9. Then python manage.py migrate to apply the migrations to the database. If it's already being applied, then it doesn't do anything, it just skips on and it continues with next command.
 
 
-## User Model
+### Customizing the Default User Model
+
 1. Django comes with a built in authentication system.
 2. This gives us a basic framework of features that we can use for our project, including registration,login and authentication. So Django has some tools that allow us to relatively easily handle this.
 3. The default Django user model is the foundation of the authentication system.
 4. It's what includes the data of the users who register to this system using Django authentication, and it's also used to authenticate those users by checking their password.
-5. Django comes with a default user model.
-6. For example, by default it uses a username instead of a user's email address. And also it's not very easy to customize.
-7. It's best to define your own user model so that it makes it easier to customize. It's kind of like future proofing your project.
-8. The main difference between our user model and the default one is that we're going to be using an email instead of a username, but I'm going to show you how to do all of the work to set up a custom user model in case you want to add more customizations to your project later on.
-
-## Creating your own User Model
-1. Create a Model based from AbstractBaseClass and PermissionMixin. The AbstractBase class provides all of the authentication features. The PermissionsMixin is used for the Django permission system that allows you to assign permissions to different users.
-2. Create a custom manager. The manager is mostly used for the Django CLI integration, but it's also used for other things like creating and managing objects that of the user
-3. Set the auth user model configuration in your settings file and this will tell your Django project that you want to use this custom model foryour project.
-4. Finaly you can create and run the migrations using the new custom user model.
+5. Django comes with a default user model but its not very easy to customize. It's best to define your own user model so that it makes it easier to customize. It's kind of like future proofing your project.
+6. Create a Model based from AbstractBaseClass and PermissionMixin. The AbstractBase class provides all of the authentication features. The PermissionsMixin is used for the Django permission system that allows you to assign permissions to different users.
+7. Create a custom manager. The manager is mostly used for the Django CLI integration, but it's also used for other things like creating and managing objects that of the user
+8. Set the auth user model configuration in your settings file and this will tell your Django project that you want to use this custom model for your project.
+9. Finaly you can create and run the migrations using the new custom user model.
 
 
-## Creating a New API based on a new Model
+### Creating a New API based on a new Model in this project
 1. Create a new Django App
-2. Delete some of the unncessary files like admin, model, migrations etc..
+2. Since we are handling admin, models and migrations via the core app, we can delete some of the unncessary files like admin, model, migrations etc..
 3. Update the models.py in the core app to add the new Model.
-4. We first create a serialiser for creating our object
+4. In our new app we first create a serialiser
 5. Serializers are used to convert complex data types, such as Django model instances, into Python data types that can be easily rendered into JSON, XML, or other content types. Serializers also provide deserialization, allowing parsed data to be converted back into complex types after first validating the incoming data. Serializers in Django are a part of the Django REST framework, a powerful and flexible toolkit for building Web APIs.
 6. We create a view that uses this serializer.
-7. So when you make the http type request, it goes through to the URL and then it gets passed into this create oject view clause, which will then call the sterilizer and create the object and then return the appropriate response.
-8. We then create a url pattern which when accessed will use the View
+7. We then create a url pattern which when accessed will use the View.
+8. So when you make the http type request, it goes through to the URL and then it gets passed into this create oject view clause, which will then call the serializer and create/update the object and then return the appropriate response.
 9. URL -> View-> Serializer -> Model
 10. So when a http call is made to the url pattern defined, it calls the view thats is defined which inturn calls the serialiser which in turn uses the model.
+11. Ensure app is enabled in settings.py
+12. Ensure that you update the urls.py in the main Django app which we named app to include the new url.
 
 
 
