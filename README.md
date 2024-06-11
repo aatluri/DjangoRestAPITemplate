@@ -296,6 +296,8 @@ Now you are doing all of this on your machine. Which means when you run the dock
 9. We then run "cat ~/.ssh/id_ed25519.pub" to display the public key.
 10. Go to your github account -> the project repo -> settings -> Add deploy keys. And add the deploy key.
 
+https://github.com/LondonAppDeveloper/build-a-backend-rest-api-with-python-django-advanced-resources/blob/main/deployment.md#install-and-configure-depdencies 
+
 ### EC2 Instance Setup
 **Install and Configure Depdencies**
 Use the below commands to configure the EC2 virtual machine running Amazon Linux 2.
